@@ -12,7 +12,7 @@ import {
   Target
 } from 'lucide-react';
 import Button from './Button';
-import Logo from './Logo';
+import InteractiveMascot from './InteractiveMascot';
 import { useNavigate } from 'react-router-dom';
 
 const ScrollStoryAnimation = () => {
@@ -27,22 +27,18 @@ const ScrollStoryAnimation = () => {
 
   // -------------------------------------------------------------
   // LINE MORPHING TIMELINE (0% to 100% Scroll):
-  //
-  // 1. Scribble Line Opening / Uncoiling (0.00 -> 0.25 Scroll):
-  //    The tangled scribble lines uncoil outwards into the circle arc.
-  //    NO image rotation! Pure line uncoiling / path opening effect.
   // -------------------------------------------------------------
 
-  // Scribble line uncoiling: path length shrinks from full (1) to 0 as it opens out
+  // 1. Scribble Line Opening / Uncoiling (0.00 -> 0.25 Scroll)
   const scribblePathLength = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
   const scribbleOpacity = useTransform(scrollYProgress, [0, 0.18, 0.25], [1, 0.6, 0]);
   
-  // Circle arc opening: path length grows from 0 to 1 as the scribble line opens into it
+  // 2. Circle arc opening (0.05 -> 0.25 Scroll)
   const circlePathLength = useTransform(scrollYProgress, [0.05, 0.25], [0, 1]);
   const circleOpacity = useTransform(scrollYProgress, [0.05, 0.15, 0.70, 0.82], [0, 1, 1, 0]);
   const circleScale = useTransform(scrollYProgress, [0.05, 0.25, 0.65, 0.82], [0.85, 1, 1, 0.35]);
 
-  // Captions for Step 1 & 2
+  // Captions for Step 1 & 2 ("your idea" -> "Shaping your path")
   const caption1Opacity = useTransform(scrollYProgress, [0, 0.08, 0.14], [1, 0.8, 0]);
   const caption2Opacity = useTransform(scrollYProgress, [0.10, 0.18, 0.28], [0, 1, 0]);
 
@@ -63,29 +59,14 @@ const ScrollStoryAnimation = () => {
   // Hero Section Full Reveal (0.85 to 1.0)
   const heroRevealOpacity = useTransform(scrollYProgress, [0.84, 0.94], [0, 1]);
   const heroRevealY = useTransform(scrollYProgress, [0.84, 0.94], [40, 0]);
+  const heroPointerEvents = useTransform(scrollYProgress, [0.84, 0.90], ['none', 'auto']);
 
   return (
     <div ref={containerRef} className="relative h-[380vh] bg-[#F7FAFF]">
       
-      {/* Sticky Viewport Stage */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden py-6 px-4 sm:px-6 lg:px-8">
+      {/* Sticky Viewport Stage (pt-16 ensures top spacing below fixed Navbar) */}
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden pt-20 pb-6 px-4 sm:px-6 lg:px-8">
         
-        {/* Top Navbar */}
-        <motion.div
-          style={{ opacity: useTransform(scrollYProgress, [0.84, 0.94], [1, 0]) }}
-          className="w-full max-w-7xl mx-auto flex items-center justify-between z-30"
-        >
-          <Logo size="md" variant="full" />
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/login')}
-              className="text-xs sm:text-sm font-bold text-[#0B2A52] hover:text-[#18B7C9] px-4 py-2 rounded-xl hover:bg-[#EAF4FF] transition-colors cursor-pointer"
-            >
-              Sign in
-            </button>
-          </div>
-        </motion.div>
-
         {/* Central Dynamic Canvas Stage */}
         <div className="relative w-full max-w-4xl mx-auto flex-1 flex items-center justify-center my-auto z-20">
           
@@ -99,7 +80,7 @@ const ScrollStoryAnimation = () => {
             >
               {/* STEP 1: Scribble Line (Fully present at 0% scroll, UNCOILS & OPENS OUT on scroll) */}
               <motion.path
-                d="M 100,20 C 140,20 180,50 160,90 C 140,130 70,140 40,100 C 20,60 60,30 100,60 C 130,80 150,120 130,160 C 110,190 50,180 30,140 C 20,100 60,60 100,20 Z"
+                d="M 100,25 C 140,25 180,55 160,95 C 140,135 70,145 40,105 C 20,65 60,35 100,65 C 130,85 150,125 130,165 C 110,195 50,185 30,145 C 20,105 60,65 100,25 Z"
                 stroke="#0B2A52"
                 strokeWidth="3.5"
                 strokeLinecap="round"
@@ -125,19 +106,19 @@ const ScrollStoryAnimation = () => {
               />
             </svg>
 
-            {/* Step 1 & 2 Captions */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            {/* Step 1 & 2 Captions: Positioned Underneath the Scribble Vector */}
+            <div className="absolute -bottom-10 sm:-bottom-12 left-0 right-0 flex flex-col items-center justify-center text-center pointer-events-none z-10">
               <motion.p
                 style={{ opacity: caption1Opacity }}
-                className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide mt-24"
+                className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide"
               >
                 your idea
               </motion.p>
               <motion.p
                 style={{ opacity: caption2Opacity }}
-                className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide mt-24"
+                className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide"
               >
-                Shaping your path
+                our idea
               </motion.p>
             </div>
 
@@ -152,41 +133,41 @@ const ScrollStoryAnimation = () => {
                 className="absolute inset-0 pointer-events-none"
               >
                 {/* 1. Resume (Top-Left) */}
-                <div className="absolute -top-6 left-6 sm:left-10 bg-white p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
+                <div className="absolute -top-4 sm:-top-6 left-2 sm:left-6 bg-white p-2.5 sm:p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-[#EAF4FF] text-[#18B7C9]">
-                    <FileText className="w-5 h-5" />
+                    <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <span className="text-xs font-bold text-[#0B2A52]">Resume</span>
                 </div>
 
                 {/* 2. DSA (Top-Right) */}
-                <div className="absolute -top-6 right-6 sm:right-10 bg-white p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
+                <div className="absolute -top-4 sm:-top-6 right-2 sm:right-6 bg-white p-2.5 sm:p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-[#EAF4FF] text-[#3B82D0]">
-                    <Code2 className="w-5 h-5" />
+                    <Code2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <span className="text-xs font-bold text-[#0B2A52]">DSA</span>
                 </div>
 
                 {/* 3. Aptitude (Right) */}
-                <div className="absolute top-1/2 -right-12 -translate-y-1/2 bg-white p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
+                <div className="absolute top-1/2 -right-4 sm:-right-10 -translate-y-1/2 bg-white p-2.5 sm:p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-[#EAF4FF] text-[#18B7C9]">
-                    <BarChart3 className="w-5 h-5" />
+                    <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <span className="text-xs font-bold text-[#0B2A52]">Aptitude</span>
                 </div>
 
                 {/* 4. Company Experience (Bottom) */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-white p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
+                <div className="absolute -bottom-6 sm:-bottom-8 left-1/2 -translate-x-1/2 bg-white p-2.5 sm:p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-[#EAF4FF] text-[#0B2A52]">
-                    <Briefcase className="w-5 h-5" />
+                    <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <span className="text-xs font-bold text-[#0B2A52]">Company Experience</span>
                 </div>
 
                 {/* 5. Mock Interviews (Left) */}
-                <div className="absolute top-1/2 -left-12 -translate-y-1/2 bg-white p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
+                <div className="absolute top-1/2 -left-4 sm:-left-10 -translate-y-1/2 bg-white p-2.5 sm:p-3 rounded-2xl shadow-lg border border-[#EAF4FF] flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-[#EAF4FF] text-[#18B7C9]">
-                    <MessageSquare className="w-5 h-5" />
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <span className="text-xs font-bold text-[#0B2A52]">Mock Interviews</span>
                 </div>
@@ -209,7 +190,7 @@ const ScrollStoryAnimation = () => {
           {/* Subtitle for "Let's Get You Placed." */}
           <motion.div
             style={{ opacity: caption3SubOpacity }}
-            className="absolute bottom-10 text-center"
+            className="absolute bottom-6 text-center"
           >
             <p className="text-base sm:text-lg font-bold text-[#0B2A52]">
               Your journey.
@@ -253,7 +234,7 @@ const ScrollStoryAnimation = () => {
 
           {/* STEP 5: Hero Section Reveal */}
           <motion.div
-            style={{ opacity: heroRevealOpacity, y: heroRevealY }}
+            style={{ opacity: heroRevealOpacity, y: heroRevealY, pointerEvents: heroPointerEvents }}
             className="absolute inset-0 flex items-center justify-center w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full px-4">
@@ -303,24 +284,9 @@ const ScrollStoryAnimation = () => {
                 </div>
               </div>
 
-              {/* Right Column Student Character Illustration */}
+              {/* Right Column Student Mascot Illustration */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl bg-gradient-to-b from-[#EAF4FF] to-white border border-[#3B82D0]/20 p-6 flex flex-col justify-end items-center overflow-hidden shadow-xl">
-                  <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#0B2A52_1px,transparent_1px)] [background-size:16px_16px]" />
-                  <div className="relative z-10 flex flex-col items-center text-center">
-                    <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-[#0B2A52] via-[#3B82D0] to-[#18B7C9] p-1 shadow-xl mb-4">
-                      <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-                        <svg className="w-24 h-24 text-[#0B2A52]" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 2a5 5 0 100 10 5 5 0 000-10zM4 20c0-3.3 3.6-6 8-6s8 2.7 8 6v1H4v-1z" />
-                        </svg>
-                      </div>
-                    </div>
-                    <span className="px-3 py-1 rounded-full bg-[#0B2A52] text-white text-xs font-bold shadow-md mb-1">
-                      Campus Student 2026
-                    </span>
-                    <p className="text-xs text-[#64748B] font-medium">Ready for Top Tech Placements</p>
-                  </div>
-                </div>
+                <InteractiveMascot />
               </div>
 
             </div>
