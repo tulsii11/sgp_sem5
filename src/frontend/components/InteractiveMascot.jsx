@@ -57,11 +57,11 @@ const InteractiveMascot = ({ className = '' }) => {
   ];
 
   return (
-    <div className={`relative w-full max-w-md mx-auto aspect-[4/5] flex items-center justify-center select-none ${className}`}>
+    <div className={`relative w-full max-w-lg mx-auto aspect-[4/5] flex items-center justify-center select-none ${className}`}>
       
       {/* Soft Gradient Aura Background */}
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#EAF4FF] via-white to-[#EAF4FF] border border-[#3B82D0]/20 shadow-2xl overflow-hidden" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#18B7C9]/15 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-76 h-76 rounded-full bg-[#18B7C9]/15 blur-3xl pointer-events-none" />
 
       {/* Mascot Image with Floating Animation */}
       <motion.div
@@ -72,7 +72,7 @@ const InteractiveMascot = ({ className = '' }) => {
         <img
           src={mascotImg}
           alt="CampusHire Student Mascot"
-          className="h-[88%] w-auto object-contain drop-shadow-xl filter"
+          className="h-[90%] w-auto object-contain drop-shadow-xl filter"
         />
       </motion.div>
 

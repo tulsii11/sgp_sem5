@@ -17,13 +17,13 @@ const Login = () => {
   // Active Field Focus for Mascot Think Box ('name' | 'email' | 'password' | 'button' | null)
   const [focusedField, setFocusedField] = useState(null);
 
-  // Animation Step State: 'input' -> 'success'
+  // Animation Step State: 'input' -> 'flipped' -> 'all_set'
   const [step, setStep] = useState('input');
   const [isFlipping, setIsFlipping] = useState(false);
 
   // Dynamic Mascot Think Box Message Subtitle
   const getThinkBoxSubtitle = () => {
-    if (step === 'success') {
+    if (step === 'flipped' || step === 'all_set') {
       return "Login Successful! Redirecting...";
     }
     switch (focusedField) {
@@ -41,7 +41,7 @@ const Login = () => {
   };
 
   const getThinkBoxTitle = () => {
-    if (step === 'success') return "Welcome back!";
+    if (step === 'flipped' || step === 'all_set') return "Welcome back!";
     return "Let's begin!";
   };
 
@@ -58,16 +58,21 @@ const Login = () => {
 
     setIsFlipping(true);
 
-    // 3D Card Flip to Success State
+    // Step 1 -> Step 2 (3D Card Flip to Flipped State showing Login Successful)
     setTimeout(() => {
-      setStep('success');
+      setStep('flipped');
       setIsFlipping(false);
     }, 600);
 
-    // Auto Navigate to Dashboard
+    // Step 2 -> Step 3 (Transition to Center Mascot with Neck ID Badge)
+    setTimeout(() => {
+      setStep('all_set');
+    }, 1400);
+
+    // Step 3 -> Auto Navigate to Dashboard after 2.8 seconds of displaying center mascot with neck ID
     setTimeout(() => {
       navigate('/dashboard');
-    }, 2400);
+    }, 4200);
   };
 
   return (
@@ -120,7 +125,7 @@ const Login = () => {
         </svg>
       </div>
 
-      {/* TOP HEADER: Top Left CampusHire Logo + Optional Back Link */}
+      {/* TOP HEADER: Top Left CampusHire Logo + Back Link */}
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between z-30 pt-6 px-6 sm:px-10">
         <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('/')}>
           <Logo size="md" variant="full" />
@@ -135,75 +140,162 @@ const Login = () => {
         </button>
       </div>
 
-      {/* MAIN STAGE GRID CONTAINER */}
-      <div className="max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-end justify-between z-20 px-4 sm:px-8 pt-4 pb-2">
-        
-        {/* LEFT COLUMN: STRAIGHT VERTICAL REALISTIC LANYARD HANGING ID CARD */}
-        <div className="lg:col-span-6 flex flex-col items-center justify-end relative h-full pt-10 sm:pt-14 pb-2">
-          
-          {/* LANYARD STRAP: Hangs Straight Down from top of screen into card slot */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-40">
-            {/* Deep Navy Fabric Ribbon Strap */}
-            <div className="w-10 sm:w-12 h-20 sm:h-24 bg-[#051833] relative shadow-md rounded-t-sm flex items-center justify-center">
-              <div className="w-1.5 h-full bg-[#082247] opacity-60" />
-            </div>
-
-            {/* Silver Metallic Ring & Swivel Clasp Assembly */}
-            <div className="relative -mt-2 flex flex-col items-center">
-              {/* Metal Outer Ring */}
-              <div className="w-9 h-9 rounded-full border-4 border-slate-300 bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400 flex items-center justify-center shadow-lg">
-                <div className="w-4 h-4 rounded-full bg-slate-300 border border-slate-400" />
+      {/* STEP 3 VIEW: YOU'RE ALL SET CENTER STAGE (MATCHING USER'S UPLOADED IMAGE) */}
+      {step === 'all_set' ? (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto w-full flex-1 flex flex-col items-center justify-between z-20 px-4 pt-2"
+        >
+          {/* Step 3 Header Badge matching uploaded image */}
+          <div className="flex flex-col items-center text-center mt-2 z-30">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white font-extrabold text-sm flex items-center justify-center shadow-md">
+                3
               </div>
-              {/* Swivel Connector Joint */}
-              <div className="w-3.5 h-4 bg-gradient-to-b from-slate-400 to-slate-200 border border-slate-400 -mt-1" />
-              {/* Chrome Clip Hook inserting through card slot */}
-              <div className="w-4 h-8 bg-gradient-to-b from-slate-200 via-slate-400 to-slate-200 border border-slate-400 rounded-b-md shadow-md flex items-center justify-center">
-                <div className="w-1.5 h-6 bg-slate-600 rounded-full" />
-              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2A52] tracking-tight">
+                You're All Set
+              </h2>
             </div>
+            <p className="text-xs sm:text-sm font-semibold text-slate-500">
+              Let's get you placed.
+            </p>
           </div>
 
-          {/* CARD CONTAINER (STRAIGHT VERTICAL - NO TILT) */}
-          <div className="perspective-1000 w-full max-w-[400px] sm:max-w-[430px] relative mt-16 sm:mt-20">
+          {/* Centered Mascot wearing the ID Card Badge around his neck */}
+          <div className="relative flex flex-col items-center justify-end flex-1 w-full max-w-[480px] sm:max-w-[540px] mt-4">
             
+            {/* MASCOT DISPLAY */}
+            <img
+              src={mascotImg}
+              alt="Campus Mascot All Set"
+              className="h-[76vh] sm:h-[82vh] max-h-[760px] w-auto object-contain object-bottom filter drop-shadow-[0_25px_50px_rgba(11,42,82,0.18)] z-10"
+            />
+
+            {/* HANGING ID BADGE AROUND MASCOT'S NECK & CHEST (EXACT MATCH TO UPLOADED IMAGE) */}
             <motion.div
-              animate={{
-                rotateY: step === 'input' ? 0 : 180,
-                scale: isFlipping ? 0.96 : 1
-              }}
-              transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-              className="transform-style-3d relative w-full bg-white rounded-[32px] shadow-[0_20px_50px_rgba(11,42,82,0.14)] border border-slate-100 p-7 sm:p-9 text-left z-20"
+              initial={{ scale: 0.8, opacity: 0, y: -20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5, type: 'spring', stiffness: 180 }}
+              className="absolute top-[37%] sm:top-[36%] left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none"
             >
-              
-              {/* Top Oval Slot Cutout for Lanyard Clip */}
-              <div className="w-14 h-4 bg-[#EAF2FB] rounded-full mx-auto mb-6 border border-slate-300 shadow-inner flex items-center justify-center">
-                <div className="w-8 h-1.5 bg-slate-300 rounded-full opacity-60" />
+              {/* V-Shape Ribbon Strap coming around neck */}
+              <div className="relative w-28 sm:w-32 h-14 sm:h-16 flex justify-center">
+                <div className="w-4 sm:w-5 h-full bg-gradient-to-b from-[#072042] to-[#04162E] -rotate-[20deg] origin-top-right shadow-md rounded-t-sm border-x border-slate-800" />
+                <div className="w-4 sm:w-5 h-full bg-gradient-to-b from-[#072042] to-[#04162E] rotate-[20deg] origin-top-left shadow-md rounded-t-sm border-x border-slate-800 -ml-1" />
               </div>
 
-              {/* FRONT SIDE: LOGIN FORM MATCHING IMAGE 2 EXACTLY */}
-              <div className={step === 'input' ? 'block' : 'hidden'}>
+              {/* Chrome Swivel Ring */}
+              <div className="relative -mt-2 flex flex-col items-center z-30">
+                <div className="w-5.5 h-5.5 rounded-full border-2 border-slate-300 bg-gradient-to-b from-slate-100 to-slate-400 flex items-center justify-center shadow-md">
+                  <div className="w-2 h-2 rounded-full bg-slate-400" />
+                </div>
+                <div className="w-2.5 h-3.5 bg-slate-300 border border-slate-400 rounded-b-sm -mt-0.5" />
+              </div>
+
+              {/* Miniature ID Badge Card on Mascot's Chest */}
+              <div className="w-44 sm:w-48 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(11,42,82,0.22)] border border-slate-200/90 p-4 text-center -mt-1">
+                {/* Oval Slot */}
+                <div className="w-9 h-2.5 bg-slate-200 rounded-full mx-auto mb-2 border border-slate-300 shadow-inner" />
                 
-                {/* Logo & Tagline */}
-                <div className="text-center mb-6">
-                  <Logo size="md" variant="full" className="justify-center mb-1.5" />
-                  
-                  {/* Subtle Subtitle line */}
-                  <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium">
-                    <span className="w-6 h-[1px] bg-slate-200" />
-                    <span>Your Campus. Your Career.</span>
-                    <span className="w-6 h-[1px] bg-slate-200" />
-                  </div>
+                {/* Logo */}
+                <Logo size="sm" variant="full" className="justify-center mb-1.5" />
+
+                <h4 className="text-xs font-extrabold text-[#0B2A52] tracking-tight">
+                  Login Successful!
+                </h4>
+
+                <p className="text-[10px] font-semibold text-slate-500 mt-0.5">
+                  Welcome back, <span className="text-[#0B2A52] font-bold">{name || 'Student'}</span>
+                </p>
+
+                <p className="text-xs font-bold text-[#18B7C9] mt-1">
+                  Let's get you placed.
+                </p>
+              </div>
+            </motion.div>
+
+          </div>
+        </motion.div>
+      ) : (
+        /* STEP 1 & 2 VIEW: FORM & FLIPPING CARD (LEFT) AND MASCOT (RIGHT) */
+        <div className="max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-end justify-between z-20 px-4 sm:px-8 pt-4 pb-2">
+          
+          {/* LEFT COLUMN: STRAIGHT VERTICAL REALISTIC LANYARD HANGING ID CARD */}
+          <div className="lg:col-span-6 flex flex-col items-center justify-end relative h-full pt-10 sm:pt-14 pb-2">
+            
+            {/* LANYARD STRAP & METAL SWIVEL HOOK CLASP */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-40 pointer-events-none">
+              <div className="w-12 sm:w-14 h-22 sm:h-26 bg-gradient-to-b from-[#03152C] via-[#072042] to-[#04162E] relative shadow-xl rounded-t-sm flex items-center justify-center border-x border-slate-800">
+                <div className="w-1.5 h-full bg-[#0B2C5A] opacity-80" />
+                <div className="w-1 h-full bg-[#0A264D] opacity-60 ml-2" />
+                <div className="absolute -bottom-1 w-12 h-2.5 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-500 rounded-sm shadow-md border border-slate-400" />
+              </div>
+
+              <div className="relative -mt-1 flex flex-col items-center">
+                <div className="w-9 sm:w-10 h-9 sm:h-10 rounded-full border-[4px] border-slate-300 bg-gradient-to-b from-slate-100 via-slate-300 to-slate-500 flex items-center justify-center shadow-lg">
+                  <div className="w-4 h-4 rounded-full bg-gradient-to-b from-slate-400 to-slate-200 border border-slate-400 shadow-inner" />
                 </div>
 
-                {/* Form Fields */}
-                <form onSubmit={handleLogin} className="space-y-4 text-left">
+                <div className="w-4 h-4.5 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-500 border border-slate-400 rounded-sm -mt-1 shadow-sm flex flex-col justify-around py-0.5">
+                  <div className="w-full h-0.5 bg-slate-500 opacity-60" />
+                  <div className="w-full h-0.5 bg-slate-500 opacity-60" />
+                </div>
+
+                <div className="relative -mt-1 flex flex-col items-center">
+                  <svg className="w-7 h-10 text-slate-300 drop-shadow-md" viewBox="0 0 30 42" fill="none">
+                    <path d="M 8,2 L 22,2 L 24,10 L 26,18 C 28,26 24,36 15,40 C 6,36 2,26 4,18 L 6,10 Z" fill="url(#metalGrad)" stroke="#94A3B8" strokeWidth="1.5" />
+                    <path d="M 12,12 C 12,22 18,22 18,12 Z" fill="#071D3A" opacity="0.15" />
+                    <path d="M 19,13 L 21,25" stroke="#475569" strokeWidth="2" strokeLinecap="round" />
+                    <defs>
+                      <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#FFFFFF" />
+                        <stop offset="35%" stopColor="#CBD5E1" />
+                        <stop offset="70%" stopColor="#64748B" />
+                        <stop offset="100%" stopColor="#E2E8F0" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD CONTAINER (STRAIGHT VERTICAL - CONSTANT DIMENSIONS DURING FLIP) */}
+            <div className="perspective-1000 w-full max-w-[400px] sm:max-w-[430px] relative mt-16 sm:mt-20">
+              
+              <motion.div
+                animate={{
+                  rotateY: step === 'input' ? 0 : 180
+                }}
+                transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                className="transform-style-3d relative w-full min-h-[490px] sm:min-h-[520px] bg-white rounded-[32px] shadow-[0_20px_50px_rgba(11,42,82,0.14)] border border-slate-100 p-7 sm:p-9 text-left z-20 flex flex-col justify-between"
+              >
+                
+                {/* Top Oval Slot Cutout for Lanyard Clip */}
+                <div className="w-14 h-4 bg-[#EAF2FB] rounded-full mx-auto mb-4 border border-slate-300 shadow-inner flex items-center justify-center shrink-0">
+                  <div className="w-8 h-1.5 bg-slate-300 rounded-full opacity-60" />
+                </div>
+
+                {/* FRONT SIDE: LOGIN FORM */}
+                <div className={step === 'input' ? 'flex flex-col flex-1 justify-between' : 'hidden'}>
                   
-                  {/* Name Input Field */}
-                  <div>
-                    <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
-                      Name
-                    </label>
-                    <div className="relative">
+                  {/* Logo & Tagline */}
+                  <div className="text-center mb-4">
+                    <Logo size="md" variant="full" className="justify-center mb-1.5" />
+                    <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium">
+                      <span className="w-6 h-[1px] bg-slate-200" />
+                      <span>Your Campus. Your Career.</span>
+                      <span className="w-6 h-[1px] bg-slate-200" />
+                    </div>
+                  </div>
+
+                  {/* Form Fields */}
+                  <form onSubmit={handleLogin} className="space-y-4 text-left">
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
+                        Name
+                      </label>
                       <input
                         type="text"
                         required
@@ -215,181 +307,173 @@ const Login = () => {
                         className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
                       />
                     </div>
-                  </div>
 
-                  {/* Email Input Field */}
-                  <div>
-                    <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
-                      Email
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onFocus={() => setFocusedField('email')}
-                        onBlur={() => setFocusedField(null)}
-                        placeholder="Enter your email"
-                        className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
-                      />
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
+                        Email
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          onFocus={() => setFocusedField('email')}
+                          onBlur={() => setFocusedField(null)}
+                          placeholder="Enter your email"
+                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Password Input Field */}
-                  <div>
-                    <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setFocusedField('password')}
-                        onBlur={() => setFocusedField(null)}
-                        placeholder="Enter your password"
-                        className="w-full pl-10 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0B2A52] p-1 rounded-lg transition-colors cursor-pointer"
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
+                        Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          onFocus={() => setFocusedField('password')}
+                          onBlur={() => setFocusedField(null)}
+                          placeholder="Enter your password"
+                          className="w-full pl-10 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0B2A52] p-1 rounded-lg transition-colors cursor-pointer"
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Solid Navy Login Button */}
-                  <button
-                    type="submit"
-                    onMouseEnter={() => setFocusedField('button')}
-                    onMouseLeave={() => setFocusedField(null)}
-                    className="w-full py-3.5 mt-2 bg-[#031B3A] text-white rounded-xl text-sm font-bold hover:bg-[#072852] transition-all shadow-md active:scale-[0.99] cursor-pointer flex items-center justify-center tracking-wide"
-                  >
-                    Login
-                  </button>
+                    <button
+                      type="submit"
+                      onMouseEnter={() => setFocusedField('button')}
+                      onMouseLeave={() => setFocusedField(null)}
+                      className="w-full py-3.5 mt-2 bg-[#031B3A] text-white rounded-xl text-sm font-bold hover:bg-[#072852] transition-all shadow-md active:scale-[0.99] cursor-pointer flex items-center justify-center tracking-wide"
+                    >
+                      Login
+                    </button>
 
-                  {/* Don't have an account? Sign up */}
-                  <div className="text-center pt-2">
-                    <p className="text-xs font-medium text-slate-500">
-                      Don't have an account?{' '}
-                      <button
-                        type="button"
-                        onClick={() => navigate('/login')}
-                        className="text-[#18B7C9] font-bold hover:underline cursor-pointer"
-                      >
-                        Sign up
-                      </button>
+                    <div className="text-center pt-2">
+                      <p className="text-xs font-medium text-slate-500">
+                        Don't have an account?{' '}
+                        <button
+                          type="button"
+                          onClick={() => navigate('/login')}
+                          className="text-[#18B7C9] font-bold hover:underline cursor-pointer"
+                        >
+                          Sign up
+                        </button>
+                      </p>
+                    </div>
+
+                  </form>
+                </div>
+
+                {/* BACK OF CARD: FLIPPED STATE */}
+                <div className={step === 'flipped' ? 'block [transform:rotateY(180deg)] my-auto flex-1 flex flex-col justify-center' : 'hidden'}>
+                  <div className="text-center py-6 flex flex-col items-center justify-center">
+                    <Logo size="md" variant="full" className="justify-center mb-6" />
+
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+                      className="w-16 h-16 rounded-full bg-[#18B7C9] text-white flex items-center justify-center shadow-xl shadow-[#18B7C9]/30 mb-5"
+                    >
+                      <CheckCircle2 className="w-10 h-10" />
+                    </motion.div>
+
+                    <h3 className="text-2xl font-extrabold text-[#0B2A52] tracking-tight">
+                      Login Successful!
+                    </h3>
+
+                    <p className="text-xs text-slate-500 font-semibold mt-2">
+                      Welcome back to CampusHire
+                    </p>
+
+                    <p className="text-sm font-bold text-[#18B7C9] mt-3">
+                      Preparing your dashboard...
                     </p>
                   </div>
-
-                </form>
-              </div>
-
-              {/* BACK OF CARD: SUCCESS FLIP STATE */}
-              <div className={step !== 'input' ? 'block [transform:rotateY(180deg)]' : 'hidden'}>
-                <div className="text-center py-10 flex flex-col items-center justify-center">
-                  <Logo size="md" variant="full" className="justify-center mb-6" />
-
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                    className="w-16 h-16 rounded-full bg-[#18B7C9] text-white flex items-center justify-center shadow-xl shadow-[#18B7C9]/30 mb-5"
-                  >
-                    <CheckCircle2 className="w-10 h-10" />
-                  </motion.div>
-
-                  <h3 className="text-2xl font-extrabold text-[#0B2A52] tracking-tight">
-                    Login Successful!
-                  </h3>
-
-                  <p className="text-xs text-slate-500 font-semibold mt-2">
-                    Welcome back to CampusHire
-                  </p>
-
-                  <p className="text-sm font-bold text-[#18B7C9] mt-3">
-                    Opening Placement Dashboard...
-                  </p>
-                </div>
-              </div>
-
-            </motion.div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: ENLARGED MASCOT WITH THINK BOX ATTACHED TO HEAD */}
-        <div className="lg:col-span-6 flex flex-col items-center lg:items-end justify-end relative h-full min-h-[580px] sm:min-h-[660px]">
-          
-          <div className="relative flex flex-col items-center justify-end h-full w-full max-w-[450px]">
-            
-            {/* MASCOT THINK BOX - Positioned Directly near Mascot's Head */}
-            <div className="absolute top-4 sm:top-10 -left-12 sm:-left-36 z-30">
-              <motion.div
-                key={getThinkBoxSubtitle()}
-                initial={{ opacity: 0, x: -15, scale: 0.94 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                transition={{ duration: 0.25 }}
-                className="bg-white rounded-2xl p-4 sm:p-5 shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 max-w-[270px] sm:max-w-[300px] flex gap-3.5 items-start relative"
-              >
-                {/* Left User Icon Badge */}
-                <div className="w-10 h-10 rounded-full bg-[#18B7C9] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#18B7C9]/30">
-                  <User className="w-5 h-5" />
                 </div>
 
-                {/* Speech Content */}
-                <div className="flex-1 text-left">
-                  <h4 className="text-sm font-extrabold text-[#0B2A52] tracking-tight">
-                    {getThinkBoxTitle()}
-                  </h4>
-                  <p className="text-xs text-slate-500 font-medium mt-0.5">
-                    {getThinkBoxSubtitle()}
-                  </p>
-
-                  {/* Interactive Pagination Dots (1st = Name, 2nd = Email, 3rd = Password) */}
-                  <div className="flex items-center gap-2 mt-3">
-                    {[0, 1, 2].map((dotIdx) => {
-                      const isActive = getActiveDotIndex() === dotIdx;
-                      return (
-                        <motion.div
-                          key={dotIdx}
-                          animate={{
-                            scale: isActive ? 1.25 : 1,
-                            backgroundColor: isActive ? '#18B7C9' : '#E2E8F0'
-                          }}
-                          transition={{ duration: 0.2 }}
-                          className={`w-2.5 h-2.5 rounded-full ${isActive ? 'bg-[#18B7C9]' : 'bg-slate-200'}`}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Right Speech Bubble Tail pointing to Mascot's Head */}
-                <div className="absolute -right-2 top-6 w-4 h-4 bg-white rotate-45 border-t border-r border-slate-100" />
               </motion.div>
             </div>
+          </div>
 
-            {/* MASSIVE ENLARGED MASCOT DISPLAY (FILLING RIGHT SIDE MATCHING IMAGE 2) */}
-            <motion.img
-              src={mascotImg}
-              alt="Campus Mascot"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="h-[78vh] sm:h-[84vh] max-h-[760px] w-auto object-contain object-bottom filter drop-shadow-[0_20px_40px_rgba(11,42,82,0.12)] z-10"
-            />
+          {/* RIGHT COLUMN: MASCOT WITH THINK BOX ATTACHED TO HEAD */}
+          <div className="lg:col-span-6 flex flex-col items-center lg:items-end justify-end relative h-full min-h-[580px] sm:min-h-[660px]">
+            
+            <div className="relative flex flex-col items-center justify-end h-full w-full max-w-[460px] sm:max-w-[520px]">
+              
+              {/* MASCOT THINK BOX */}
+              <div className="absolute top-4 sm:top-8 -left-8 sm:-left-28 z-30">
+                <motion.div
+                  key={getThinkBoxSubtitle()}
+                  initial={{ opacity: 0, x: -15, scale: 0.94 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ duration: 0.25 }}
+                  className="bg-white rounded-2xl p-4 sm:p-5 shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 max-w-[270px] sm:max-w-[300px] flex gap-3.5 items-start relative"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#18B7C9] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#18B7C9]/30">
+                    <User className="w-5 h-5" />
+                  </div>
+
+                  <div className="flex-1 text-left">
+                    <h4 className="text-sm font-extrabold text-[#0B2A52] tracking-tight">
+                      {getThinkBoxTitle()}
+                    </h4>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                      {getThinkBoxSubtitle()}
+                    </p>
+
+                    <div className="flex items-center gap-2 mt-3">
+                      {[0, 1, 2].map((dotIdx) => {
+                        const isActive = getActiveDotIndex() === dotIdx;
+                        return (
+                          <motion.div
+                            key={dotIdx}
+                            animate={{
+                              scale: isActive ? 1.25 : 1,
+                              backgroundColor: isActive ? '#18B7C9' : '#E2E8F0'
+                            }}
+                            transition={{ duration: 0.2 }}
+                            className={`w-2.5 h-2.5 rounded-full ${isActive ? 'bg-[#18B7C9]' : 'bg-slate-200'}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="absolute -right-2 top-6 w-4 h-4 bg-white rotate-45 border-t border-r border-slate-100" />
+                </motion.div>
+              </div>
+
+              {/* MASCOT DISPLAY */}
+              <motion.img
+                src={mascotImg}
+                alt="Campus Mascot"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="h-[78vh] sm:h-[84vh] max-h-[780px] w-auto object-contain object-bottom filter drop-shadow-[0_20px_40px_rgba(11,42,82,0.14)] z-10"
+              />
+
+            </div>
 
           </div>
 
         </div>
-
-      </div>
+      )}
 
       {/* FOOTER: Centered Security Badge matching Image 2 */}
       <div className="max-w-7xl mx-auto w-full text-center text-xs text-slate-400 font-medium py-3 z-30 flex items-center justify-center gap-1.5">
