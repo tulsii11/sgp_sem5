@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const OpeningAnimation = ({ onComplete }) => {
   useEffect(() => {
@@ -25,18 +25,18 @@ const OpeningAnimation = ({ onComplete }) => {
 
       <div className="relative flex flex-col items-center justify-center p-8 text-center z-10">
         
-        {/* Logo Container & Circular Cyan Animated Stroke */}
-        <div className="relative flex items-center justify-center mb-6">
+        {/* Logo Container & Circular Cyan Animated Stroke (Perfectly Centered Box) */}
+        <div className="relative flex items-center justify-center w-36 h-36 mb-6">
           
-          {/* STEP 4: Animated Thin Cyan Circular Stroke SVG Around Logo */}
-          <svg className="w-36 h-36 absolute inset-0 -m-3 pointer-events-none" viewBox="0 0 100 100">
+          {/* Thin Cyan Circular Stroke SVG - Centered */}
+          <svg className="w-36 h-36 absolute inset-0 pointer-events-none" viewBox="0 0 100 100">
             <motion.circle
               cx="50"
               cy="50"
-              r="45"
+              r="44"
               fill="none"
               stroke="#18B7C9"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeLinecap="round"
               initial={{ pathLength: 0, rotate: -90, opacity: 0 }}
               animate={{ pathLength: 1, rotate: 270, opacity: 1 }}
@@ -48,9 +48,9 @@ const OpeningAnimation = ({ onComplete }) => {
             />
           </svg>
 
-          {/* STEP 2: Graduation Cap / Shield Logo Gently Scales Up */}
+          {/* Graduation Cap / Shield Logo Badge Centered */}
           <motion.div
-            className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#0B2A52] to-[#071D3A] flex items-center justify-center text-white shadow-xl shadow-[#0B2A52]/20 border border-[#18B7C9]/40 relative"
+            className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#0B2A52] to-[#071D3A] flex items-center justify-center text-white shadow-xl shadow-[#0B2A52]/20 border border-[#18B7C9]/40 relative z-10"
             initial={{ scale: 0.4, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -71,7 +71,7 @@ const OpeningAnimation = ({ onComplete }) => {
           </motion.div>
         </div>
 
-        {/* STEP 3: "CampusHire" text appears underneath using smooth fade + upward motion */}
+        {/* "CampusHire" text appears underneath using smooth fade + upward motion */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ const OpeningAnimation = ({ onComplete }) => {
           <span className="text-[#18B7C9]">Hire</span>
         </motion.div>
 
-        {/* STEP 5: Tagline "Your Campus. Your Career." */}
+        {/* Tagline "Your Campus. Your Career." */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

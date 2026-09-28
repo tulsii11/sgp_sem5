@@ -26,49 +26,57 @@ const ScrollStoryAnimation = () => {
   });
 
   // -------------------------------------------------------------
-  // LINE MORPHING TIMELINE (0% to 100% Scroll):
+  // NON-OVERLAPPING SCROLL TIMELINE:
   // -------------------------------------------------------------
 
-  // 1. Scribble Line Opening / Uncoiling (0.00 -> 0.25 Scroll)
-  const scribblePathLength = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
-  const scribbleOpacity = useTransform(scrollYProgress, [0, 0.18, 0.25], [1, 0.6, 0]);
+  // 1. Mouse Pill "SCROLL TO EXPLORE": Visible ONLY at 0% scroll (0.00 -> 0.05), vanishes completely on scroll!
+  const scrollHelperOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.3, 0]);
+
+  // 2. Caption "your idea": Visible ONLY at 0% scroll (0.00 -> 0.05), vanishes instantly when scrolling starts!
+  const captionYourIdeaOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.3, 0]);
+
+  // 3. Scribble Line Opening / Uncoiling (0.00 -> 0.22 Scroll)
+  const scribblePathLength = useTransform(scrollYProgress, [0, 0.20], [1, 0]);
+  const scribbleOpacity = useTransform(scrollYProgress, [0, 0.14, 0.22], [1, 0.5, 0]);
   
-  // 2. Circle arc opening (0.05 -> 0.25 Scroll)
-  const circlePathLength = useTransform(scrollYProgress, [0.05, 0.25], [0, 1]);
-  const circleOpacity = useTransform(scrollYProgress, [0.05, 0.15, 0.70, 0.82], [0, 1, 1, 0]);
-  const circleScale = useTransform(scrollYProgress, [0.05, 0.25, 0.65, 0.82], [0.85, 1, 1, 0.35]);
+  // 4. Circle Arc Opening (0.05 -> 0.24 Scroll)
+  const circlePathLength = useTransform(scrollYProgress, [0.05, 0.22], [0, 1]);
+  const circleOpacity = useTransform(scrollYProgress, [0.05, 0.14, 0.70, 0.82], [0, 1, 1, 0]);
+  const circleScale = useTransform(scrollYProgress, [0.05, 0.22, 0.65, 0.82], [0.85, 1, 1, 0.35]);
 
-  // Captions for Step 1 & 2 ("your idea" -> "Shaping your path")
-  const caption1Opacity = useTransform(scrollYProgress, [0, 0.08, 0.14], [1, 0.8, 0]);
-  const caption2Opacity = useTransform(scrollYProgress, [0.10, 0.18, 0.28], [0, 1, 0]);
+  // 5. Caption "our idea" (Inside forming circle from 0.08 to 0.30)
+  const captionOurIdeaOpacity = useTransform(scrollYProgress, [0.08, 0.16, 0.28], [0, 1, 0]);
+  const captionOurIdeaScale = useTransform(scrollYProgress, [0.08, 0.16, 0.28], [0.85, 1, 0.9]);
 
-  // Satellites Around Circle (Resume, DSA, Aptitude, Experience, Mock Interviews)
-  const satellitesOpacity = useTransform(scrollYProgress, [0.24, 0.34, 0.52, 0.60], [0, 1, 1, 0]);
-  const satellitesScale = useTransform(scrollYProgress, [0.24, 0.34], [0.8, 1]);
+  // 6. 5 Satellites Around Circle (Resume, DSA, Aptitude, Experience, Mock Interviews) (0.30 to 0.56)
+  const satellitesOpacity = useTransform(scrollYProgress, [0.30, 0.38, 0.52, 0.58], [0, 1, 1, 0]);
+  const satellitesScale = useTransform(scrollYProgress, [0.30, 0.38], [0.8, 1]);
 
-  // Center Message inside Circle: "Let's Get You Placed."
-  const placedTextOpacity = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.70], [0, 1, 1, 0]);
-  const placedTextScale = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.70], [0.85, 1, 1, 0.9]);
-  const caption3SubOpacity = useTransform(scrollYProgress, [0.40, 0.50, 0.65], [0, 1, 0]);
+  // 7. Center Message inside Circle: "Let's Get You Placed." (0.35 to 0.65)
+  const placedTextOpacity = useTransform(scrollYProgress, [0.35, 0.45, 0.60, 0.66], [0, 1, 1, 0]);
+  const placedTextScale = useTransform(scrollYProgress, [0.35, 0.45, 0.60, 0.66], [0.85, 1, 1, 0.9]);
 
-  // Transformation to CampusHire Logo (0.65 to 0.88)
-  const logoTransformOpacity = useTransform(scrollYProgress, [0.65, 0.73, 0.83, 0.90], [0, 1, 1, 0]);
-  const logoTransformScale = useTransform(scrollYProgress, [0.65, 0.75, 0.83], [0.7, 1, 0.9]);
-  const caption4SubOpacity = useTransform(scrollYProgress, [0.70, 0.78, 0.86], [0, 1, 0]);
+  // 8. Subtitle below circle: "Your journey. Structured. Guided. Successful." (ONLY AFTER satellites & Company Experience badge vanish at 0.60!)
+  const caption3SubOpacity = useTransform(scrollYProgress, [0.60, 0.66, 0.74], [0, 1, 0]);
 
-  // Hero Section Full Reveal (0.85 to 1.0)
-  const heroRevealOpacity = useTransform(scrollYProgress, [0.84, 0.94], [0, 1]);
-  const heroRevealY = useTransform(scrollYProgress, [0.84, 0.94], [40, 0]);
-  const heroPointerEvents = useTransform(scrollYProgress, [0.84, 0.90], ['none', 'auto']);
+  // 9. Transformation to CampusHire Logo (0.72 to 0.88)
+  const logoTransformOpacity = useTransform(scrollYProgress, [0.72, 0.78, 0.85, 0.90], [0, 1, 1, 0]);
+  const logoTransformScale = useTransform(scrollYProgress, [0.72, 0.78, 0.85], [0.7, 1, 0.9]);
+  const caption4SubOpacity = useTransform(scrollYProgress, [0.75, 0.80, 0.88], [0, 1, 0]);
+
+  // 10. Hero Section Full Reveal (0.86 to 1.0)
+  const heroRevealOpacity = useTransform(scrollYProgress, [0.86, 0.95], [0, 1]);
+  const heroRevealY = useTransform(scrollYProgress, [0.86, 0.95], [40, 0]);
+  const heroPointerEvents = useTransform(scrollYProgress, [0.86, 0.92], ['none', 'auto']);
 
   return (
     <div ref={containerRef} className="relative h-[380vh] bg-[#F7FAFF]">
       
-      {/* Sticky Viewport Stage (pt-16 ensures top spacing below fixed Navbar) */}
+      {/* Sticky Viewport Stage */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden pt-20 pb-6 px-4 sm:px-6 lg:px-8">
         
         {/* Central Dynamic Canvas Stage */}
-        <div className="relative w-full max-w-4xl mx-auto flex-1 flex items-center justify-center my-auto z-20">
+        <div className="relative w-full max-w-4xl mx-auto flex-1 flex flex-col items-center justify-center my-auto z-20">
           
           {/* SVG Canvas for Line Uncoiling Animation */}
           <div className="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
@@ -78,7 +86,7 @@ const ScrollStoryAnimation = () => {
               viewBox="0 0 200 200"
               fill="none"
             >
-              {/* STEP 1: Scribble Line (Fully present at 0% scroll, UNCOILS & OPENS OUT on scroll) */}
+              {/* STEP 1: Scribble Line (Fully present at 0% scroll, UNCOILS & OPENS OUT smoothly on scroll) */}
               <motion.path
                 d="M 100,25 C 140,25 180,55 160,95 C 140,135 70,145 40,105 C 20,65 60,35 100,65 C 130,85 150,125 130,165 C 110,195 50,185 30,145 C 20,105 60,65 100,25 Z"
                 stroke="#0B2A52"
@@ -91,7 +99,7 @@ const ScrollStoryAnimation = () => {
                 }}
               />
 
-              {/* STEP 2: Circle Perimeter Arc (Opens up directly as the scribble lines expand) */}
+              {/* STEP 2: Circle Perimeter Arc (Opens up directly as scribble uncoils) */}
               <motion.circle
                 cx="100"
                 cy="100"
@@ -106,21 +114,25 @@ const ScrollStoryAnimation = () => {
               />
             </svg>
 
-            {/* Step 1 & 2 Captions: Positioned Underneath the Scribble Vector */}
-            <div className="absolute -bottom-10 sm:-bottom-12 left-0 right-0 flex flex-col items-center justify-center text-center pointer-events-none z-10">
-              <motion.p
-                style={{ opacity: caption1Opacity }}
-                className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide"
-              >
+            {/* Step 1 Caption: "your idea" (Sits 16px below scribble, vanishes INSTANTLY on scroll) */}
+            <motion.div
+              style={{ opacity: captionYourIdeaOpacity }}
+              className="absolute -bottom-10 left-0 right-0 flex justify-center text-center pointer-events-none z-10"
+            >
+              <p className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide">
                 your idea
-              </motion.p>
-              <motion.p
-                style={{ opacity: caption2Opacity }}
-                className="text-2xl sm:text-3xl font-serif italic text-[#18B7C9] tracking-wide"
-              >
+              </p>
+            </motion.div>
+
+            {/* Step 2 Message Inside Forming Circle: "our idea" */}
+            <motion.div
+              style={{ opacity: captionOurIdeaOpacity, scale: captionOurIdeaScale }}
+              className="absolute inset-0 flex items-center justify-center text-center pointer-events-none z-15"
+            >
+              <h2 className="text-3xl sm:text-4xl font-serif italic text-[#18B7C9] tracking-wide">
                 our idea
-              </motion.p>
-            </div>
+              </h2>
+            </motion.div>
 
             {/* STEP 3 & 4: Formed Circle Container with Satellites & Center Message */}
             <motion.div
@@ -187,10 +199,10 @@ const ScrollStoryAnimation = () => {
 
           </div>
 
-          {/* Subtitle for "Let's Get You Placed." */}
+          {/* Subtitle below circle: "Your journey. Structured. Guided. Successful." (ONLY AFTER satellites & Company Experience badge vanish at 0.60!) */}
           <motion.div
             style={{ opacity: caption3SubOpacity }}
-            className="absolute bottom-6 text-center"
+            className="mt-6 text-center pointer-events-none"
           >
             <p className="text-base sm:text-lg font-bold text-[#0B2A52]">
               Your journey.
@@ -203,7 +215,7 @@ const ScrollStoryAnimation = () => {
           {/* STEP 4: Transformation to CampusHire Logo */}
           <motion.div
             style={{ opacity: logoTransformOpacity, scale: logoTransformScale }}
-            className="absolute flex flex-col items-center justify-center text-center"
+            className="absolute flex flex-col items-center justify-center text-center pointer-events-none"
           >
             <div className="relative w-40 h-40 sm:w-52 sm:h-52 rounded-full border-2 border-dashed border-[#18B7C9]/40 flex items-center justify-center p-4">
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-br from-[#0B2A52] to-[#071D3A] flex items-center justify-center text-white shadow-2xl shadow-[#0B2A52]/30 border border-[#18B7C9]/40">
@@ -294,10 +306,10 @@ const ScrollStoryAnimation = () => {
 
         </div>
 
-        {/* Scroll Helper Indicator */}
+        {/* Scroll Helper Indicator (Fades out completely on scroll) */}
         <motion.div
-          style={{ opacity: useTransform(scrollYProgress, [0, 0.84, 0.94], [1, 1, 0]) }}
-          className="z-30 flex flex-col items-center text-center mb-2"
+          style={{ opacity: scrollHelperOpacity }}
+          className="z-30 flex flex-col items-center text-center mb-2 pointer-events-none"
         >
           <div className="w-6 h-10 rounded-full border-2 border-[#0B2A52]/40 flex justify-center p-1">
             <motion.div
