@@ -32,7 +32,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 bg-[#F7FAFF] relative overflow-hidden">
+    <section id="how-it-works" className="py-24 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <SectionHeading
@@ -53,7 +53,7 @@ const HowItWorks = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-white rounded-3xl p-7 border border-[#EAF4FF] shadow-sm relative flex flex-col justify-between"
+                className="bg-white/85 backdrop-blur-md rounded-3xl p-7 border border-white/80 shadow-md relative flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">

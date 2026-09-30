@@ -5,7 +5,7 @@ import SectionHeading from '../SectionHeading';
 
 const Stage3Probability = () => {
   return (
-    <div className="py-24 bg-[#F7FAFF] relative overflow-hidden">
+    <div className="py-24 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeading
@@ -17,7 +17,7 @@ const Stage3Probability = () => {
         />
 
         {/* Central Metric Card */}
-        <div className="max-w-3xl mx-auto bg-white rounded-3xl p-8 md:p-12 shadow-xl shadow-[#0B2A52]/8 border border-[#EAF4FF] relative overflow-hidden text-center">
+        <div className="max-w-3xl mx-auto bg-white/85 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-xl shadow-[#0B2A52]/8 border border-white/80 relative overflow-hidden text-center">
           
           {/* Subtle Background Blue Gradient Pill */}
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#18B7C9]/10 rounded-full blur-3xl pointer-events-none" />

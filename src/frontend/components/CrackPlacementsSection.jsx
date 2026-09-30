@@ -45,7 +45,7 @@ const CrackPlacementsSection = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-white relative overflow-hidden">
+    <section id="about" className="py-20 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Step 7 Heading */}
@@ -73,7 +73,7 @@ const CrackPlacementsSection = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
                 whileHover={{ y: -6 }}
-                className="bg-[#F7FAFF] rounded-3xl p-6 border border-[#EAF4FF] hover:border-[#18B7C9]/40 shadow-sm transition-all duration-300 flex flex-col justify-between"
+                className="bg-white/85 backdrop-blur-md rounded-3xl p-6 border border-white/80 hover:border-[#18B7C9]/40 shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className={`w-12 h-12 rounded-2xl ${card.color} flex items-center justify-center mb-5`}>
@@ -91,7 +91,7 @@ const CrackPlacementsSection = () => {
         </div>
 
         {/* Trusted By Students From Top Colleges Banner */}
-        <div className="mt-16 pt-10 border-t border-[#EAF4FF] text-center">
+        <div className="mt-16 pt-10 border-t border-[#0B2A52]/10 text-center">
           <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-6 flex items-center justify-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#18B7C9]" />
             Trusted by students from top colleges
@@ -101,7 +101,7 @@ const CrackPlacementsSection = () => {
             {colleges.map((college) => (
               <div
                 key={college.name}
-                className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#F7FAFF] border border-[#EAF4FF] shadow-xs text-xs font-bold text-[#0B2A52] hover:border-[#18B7C9]/30 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/80 backdrop-blur-md border border-white/80 shadow-xs text-xs font-bold text-[#0B2A52] hover:border-[#18B7C9]/30 transition-colors"
               >
                 <GraduationCap className="w-4 h-4 text-[#18B7C9]" />
                 <span>{college.name}</span>

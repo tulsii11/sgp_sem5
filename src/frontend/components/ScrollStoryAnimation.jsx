@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
   FileText,
   Code2,
@@ -16,64 +16,204 @@ import InteractiveMascot from './InteractiveMascot';
 import { useNavigate } from 'react-router-dom';
 
 const ScrollStoryAnimation = () => {
-  const containerRef = useRef(null);
   const navigate = useNavigate();
 
-  // Track scroll inside the tall story track (380vh)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end']
-  });
+  // Controlled animation progress from 0.0 to 1.0
+  const animProgress = useMotionValue(0);
+  const smoothProgress = useSpring(animProgress, { stiffness: 120, damping: 22, mass: 0.6 });
+  const progressRef = useRef(0);
+
+  // Wheel and Touch Event Scroll Lock Controller
+  useEffect(() => {
+    let touchStartY = 0;
+
+    const lockBodyScroll = () => {
+      document.body.style.overflow = 'hidden';
+    };
+
+    const unlockBodyScroll = () => {
+      document.body.style.overflow = 'unset';
+    };
+
+    const handleWheel = (e) => {
+      // Only capture wheel events when near the top of the page
+      if (window.scrollY <= 15) {
+        if (progressRef.current < 1 || (progressRef.current >= 1 && e.deltaY < 0 && window.scrollY <= 15)) {
+          e.preventDefault();
+
+          // Sensitivity scaling for wheel input
+          const delta = e.deltaY * 0.0016;
+          const nextVal = Math.max(0, Math.min(1, progressRef.current + delta));
+
+          progressRef.current = nextVal;
+          animProgress.set(nextVal);
+
+          if (nextVal >= 1) {
+            unlockBodyScroll();
+          } else {
+            lockBodyScroll();
+          }
+        }
+      }
+    };
+
+    const handleTouchStart = (e) => {
+      if (e.touches.length > 0) {
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (window.scrollY <= 15 && e.touches.length > 0) {
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchStartY - touchY;
+
+        if (progressRef.current < 1 || (progressRef.current >= 1 && deltaY < 0 && window.scrollY <= 15)) {
+          if (e.cancelable) e.preventDefault();
+
+          const delta = deltaY * 0.0028;
+          const nextVal = Math.max(0, Math.min(1, progressRef.current + delta));
+
+          progressRef.current = nextVal;
+          animProgress.set(nextVal);
+          touchStartY = touchY;
+
+          if (nextVal >= 1) {
+            unlockBodyScroll();
+          } else {
+            lockBodyScroll();
+          }
+        }
+      }
+    };
+
+    // Lock body scroll on initial mount if at top
+    if (progressRef.current < 1 && window.scrollY <= 15) {
+      lockBodyScroll();
+    }
+
+    // Unlock body scroll if user clicks any anchor link or leaves hero stage
+    const handleHashOrNav = () => {
+      if (window.location.hash && window.location.hash !== '#hero') {
+        progressRef.current = 1;
+        animProgress.set(1);
+        unlockBodyScroll();
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('hashchange', handleHashOrNav);
+
+    return () => {
+      unlockBodyScroll();
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('hashchange', handleHashOrNav);
+    };
+  }, [animProgress]);
 
   // -------------------------------------------------------------
-  // NON-OVERLAPPING SCROLL TIMELINE:
+  // NON-OVERLAPPING SCROLL TIMELINE (0.0 to 1.0):
   // -------------------------------------------------------------
 
   // 1. Mouse Pill "SCROLL TO EXPLORE": Visible ONLY at 0% scroll (0.00 -> 0.05), vanishes completely on scroll!
-  const scrollHelperOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.3, 0]);
+  const scrollHelperOpacity = useTransform(smoothProgress, [0, 0.02, 0.05], [1, 0.3, 0]);
 
-  // 2. Caption "your idea": Visible ONLY at 0% scroll (0.00 -> 0.05), vanishes instantly when scrolling starts!
-  const captionYourIdeaOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.3, 0]);
+  // 2. Caption "your idea": Stays visible while circle forms, disappears EXACTLY when 90% of circle is formed (at 0.20 scroll)
+  const captionYourIdeaOpacity = useTransform(smoothProgress, [0, 0.14, 0.20], [1, 1, 0]);
 
   // 3. Scribble Line Opening / Uncoiling (0.00 -> 0.22 Scroll)
-  const scribblePathLength = useTransform(scrollYProgress, [0, 0.20], [1, 0]);
-  const scribbleOpacity = useTransform(scrollYProgress, [0, 0.14, 0.22], [1, 0.5, 0]);
+  const scribblePathLength = useTransform(smoothProgress, [0, 0.20], [1, 0]);
+  const scribbleOpacity = useTransform(smoothProgress, [0, 0.14, 0.22], [1, 0.5, 0]);
   
-  // 4. Circle Arc Opening (0.05 -> 0.24 Scroll)
-  const circlePathLength = useTransform(scrollYProgress, [0.05, 0.22], [0, 1]);
-  const circleOpacity = useTransform(scrollYProgress, [0.05, 0.14, 0.70, 0.82], [0, 1, 1, 0]);
-  const circleScale = useTransform(scrollYProgress, [0.05, 0.22, 0.65, 0.82], [0.85, 1, 1, 0.35]);
+  // 4. Circle Arc Opening (0.05 -> 0.22 Scroll)
+  const circlePathLength = useTransform(smoothProgress, [0.05, 0.22], [0, 1]);
+  const circleOpacity = useTransform(smoothProgress, [0.05, 0.14, 0.70, 0.84], [0, 1, 1, 0]);
+  const circleScale = useTransform(smoothProgress, [0.05, 0.22, 0.65, 0.84], [0.85, 1, 1, 0.35]);
 
-  // 5. Caption "our idea" (Inside forming circle from 0.08 to 0.30)
-  const captionOurIdeaOpacity = useTransform(scrollYProgress, [0.08, 0.16, 0.28], [0, 1, 0]);
-  const captionOurIdeaScale = useTransform(scrollYProgress, [0.08, 0.16, 0.28], [0.85, 1, 0.9]);
+  // 5. Caption "our idea" (Fades in right as circle reaches completion from 0.18 to 0.32)
+  const captionOurIdeaOpacity = useTransform(smoothProgress, [0.18, 0.24, 0.32], [0, 1, 0]);
+  const captionOurIdeaScale = useTransform(smoothProgress, [0.18, 0.24, 0.32], [0.85, 1, 0.9]);
 
   // 6. 5 Satellites Around Circle (Resume, DSA, Aptitude, Experience, Mock Interviews) (0.30 to 0.56)
-  const satellitesOpacity = useTransform(scrollYProgress, [0.30, 0.38, 0.52, 0.58], [0, 1, 1, 0]);
-  const satellitesScale = useTransform(scrollYProgress, [0.30, 0.38], [0.8, 1]);
+  const satellitesOpacity = useTransform(smoothProgress, [0.30, 0.38, 0.52, 0.58], [0, 1, 1, 0]);
+  const satellitesScale = useTransform(smoothProgress, [0.30, 0.38], [0.8, 1]);
 
-  // 7. Center Message inside Circle: "Let's Get You Placed." (0.35 to 0.65)
-  const placedTextOpacity = useTransform(scrollYProgress, [0.35, 0.45, 0.60, 0.66], [0, 1, 1, 0]);
-  const placedTextScale = useTransform(scrollYProgress, [0.35, 0.45, 0.60, 0.66], [0.85, 1, 1, 0.9]);
+  // 7. Center Message inside Circle: "Let's Get You Placed." (0.35 to 0.62)
+  const placedTextOpacity = useTransform(smoothProgress, [0.35, 0.43, 0.58, 0.64], [0, 1, 1, 0]);
+  const placedTextScale = useTransform(smoothProgress, [0.35, 0.43, 0.58, 0.64], [0.85, 1, 1, 0.9]);
 
-  // 8. Subtitle below circle: "Your journey. Structured. Guided. Successful." (ONLY AFTER satellites & Company Experience badge vanish at 0.60!)
-  const caption3SubOpacity = useTransform(scrollYProgress, [0.60, 0.66, 0.74], [0, 1, 0]);
+  // 8. Subtitle below circle: "Your journey. Structured. Guided. Successful." (0.60 to 0.74)
+  const caption3SubOpacity = useTransform(smoothProgress, [0.60, 0.66, 0.74], [0, 1, 0]);
 
-  // 9. Transformation to CampusHire Logo (0.72 to 0.88)
-  const logoTransformOpacity = useTransform(scrollYProgress, [0.72, 0.78, 0.85, 0.90], [0, 1, 1, 0]);
-  const logoTransformScale = useTransform(scrollYProgress, [0.72, 0.78, 0.85], [0.7, 1, 0.9]);
-  const caption4SubOpacity = useTransform(scrollYProgress, [0.75, 0.80, 0.88], [0, 1, 0]);
+  // 9. Transformation to CampusHire Logo (0.72 to 0.86)
+  const logoTransformOpacity = useTransform(smoothProgress, [0.72, 0.78, 0.84, 0.88], [0, 1, 1, 0]);
+  const logoTransformScale = useTransform(smoothProgress, [0.72, 0.78, 0.84], [0.7, 1, 0.9]);
+  const caption4SubOpacity = useTransform(smoothProgress, [0.74, 0.80, 0.88], [0, 1, 0]);
 
-  // 10. Hero Section Full Reveal (0.86 to 1.0)
-  const heroRevealOpacity = useTransform(scrollYProgress, [0.86, 0.95], [0, 1]);
-  const heroRevealY = useTransform(scrollYProgress, [0.86, 0.95], [40, 0]);
-  const heroPointerEvents = useTransform(scrollYProgress, [0.86, 0.92], ['none', 'auto']);
+  // 10. Hero Section Full Reveal (0.84 to 0.98)
+  const heroRevealOpacity = useTransform(smoothProgress, [0.84, 0.98], [0, 1]);
+  const heroRevealY = useTransform(smoothProgress, [0.84, 0.98], [30, 0]);
+  const heroPointerEvents = useTransform(smoothProgress, [0.84, 0.94], ['none', 'auto']);
 
   return (
-    <div ref={containerRef} className="relative h-[380vh] bg-[#F7FAFF]">
+    <div className="relative h-screen w-full overflow-hidden select-none">
       
-      {/* Sticky Viewport Stage */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden pt-20 pb-6 px-4 sm:px-6 lg:px-8">
+      {/* Viewport Stage */}
+      <div className="h-full w-full flex flex-col justify-between items-center overflow-hidden pt-20 pb-6 px-4 sm:px-6 lg:px-8 z-10 bg-gradient-to-br from-[#EEF5FF] via-[#E2EEFC] to-[#D5E6F8]">
+        
+        {/* Background Decor 1: Left & Right Dot Grids */}
+        <div className="absolute top-24 left-8 sm:left-12 pointer-events-none opacity-40 hidden md:grid grid-cols-6 gap-2.5 z-0">
+          {[...Array(30)].map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#18B7C9]" />
+          ))}
+        </div>
+        <div className="absolute top-28 right-8 sm:right-12 pointer-events-none opacity-40 hidden md:grid grid-cols-6 gap-2.5 z-0">
+          {[...Array(30)].map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#18B7C9]" />
+          ))}
+        </div>
+
+        {/* Background Decor 2: Concentric Circles & Soft Radial Cyan Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] sm:w-[680px] sm:h-[680px] border border-[#18B7C9]/25 rounded-full pointer-events-none z-0" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] sm:w-[480px] sm:h-[480px] border border-[#2563EB]/15 rounded-full pointer-events-none z-0" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#18B7C9]/15 rounded-full blur-3xl pointer-events-none z-0" />
+
+        {/* Background Decor 3: Vector College Building & City Skyline Silhouettes */}
+        <div className="absolute bottom-0 left-0 right-0 h-44 sm:h-64 pointer-events-none opacity-35 flex items-end justify-between px-4 sm:px-8 z-0 overflow-hidden">
+          {/* Left College Building with Dome & Flag */}
+          <svg className="w-72 sm:w-96 h-full text-[#3B82F6]" viewBox="0 0 350 220" fill="currentColor">
+            <rect x="40" y="80" width="270" height="140" rx="4" />
+            <polygon points="175,25 40,80 310,80" />
+            <rect x="70" y="95" width="16" height="125" fill="#FFFFFF" />
+            <rect x="115" y="95" width="16" height="125" fill="#FFFFFF" />
+            <rect x="160" y="95" width="30" height="125" fill="#FFFFFF" />
+            <rect x="219" y="95" width="16" height="125" fill="#FFFFFF" />
+            <rect x="264" y="95" width="16" height="125" fill="#FFFFFF" />
+            <line x1="175" y1="25" x2="175" y2="5" stroke="currentColor" strokeWidth="3" />
+            <polygon points="175,5 195,10 175,15" />
+          </svg>
+
+          {/* Center Skyscraper City Skyline */}
+          <svg className="w-96 sm:w-[500px] h-[80%] text-[#2563EB] mx-auto hidden md:block" viewBox="0 0 400 200" fill="currentColor">
+            <rect x="50" y="40" width="50" height="160" rx="2" />
+            <rect x="110" y="10" width="70" height="190" rx="2" />
+            <polygon points="145,0 110,10 180,10" />
+            <rect x="190" y="60" width="60" height="140" rx="2" />
+            <rect x="260" y="30" width="80" height="170" rx="2" />
+            <rect x="125" y="30" width="12" height="140" fill="#FFFFFF" opacity="0.6" />
+            <rect x="148" y="30" width="12" height="140" fill="#FFFFFF" opacity="0.6" />
+          </svg>
+
+          {/* Right Skyline */}
+          <svg className="w-64 sm:w-80 h-full text-[#1D4ED8]" viewBox="0 0 300 180" fill="currentColor">
+            <rect x="30" y="50" width="100" height="130" rx="2" />
+            <rect x="140" y="20" width="120" height="160" rx="2" />
+          </svg>
+        </div>
         
         {/* Central Dynamic Canvas Stage */}
         <div className="relative w-full max-w-4xl mx-auto flex-1 flex flex-col items-center justify-center my-auto z-20">

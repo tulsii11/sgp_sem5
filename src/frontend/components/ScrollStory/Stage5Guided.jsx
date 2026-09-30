@@ -57,7 +57,7 @@ const Stage5Guided = () => {
   ];
 
   return (
-    <div className="py-24 bg-[#F7FAFF] relative overflow-hidden">
+    <div className="py-24 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeading
@@ -83,7 +83,7 @@ const Stage5Guided = () => {
                 className={`rounded-3xl p-6 shadow-lg shadow-[#0B2A52]/5 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
                   path.featured
                     ? 'bg-[#0B2A52] text-white border-[#0B2A52]'
-                    : 'bg-white text-[#0B2A52] border-[#EAF4FF] hover:border-[#18B7C9]/40'
+                    : 'bg-white/85 backdrop-blur-md text-[#0B2A52] border-white/80 hover:border-[#18B7C9]/40'
                 }`}
               >
                 {/* Match Badge */}

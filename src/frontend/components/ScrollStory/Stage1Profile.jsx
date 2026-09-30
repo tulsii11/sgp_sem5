@@ -48,7 +48,7 @@ const Stage1Profile = () => {
   ];
 
   return (
-    <div className="py-20 bg-gradient-to-b from-[#F7FAFF] to-white relative overflow-hidden">
+    <div className="py-20 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
@@ -72,10 +72,10 @@ const Stage1Profile = () => {
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className={`rounded-2xl p-6 shadow-lg shadow-[#0B2A52]/5 border border-[#EAF4FF] flex flex-col justify-between relative group overflow-hidden ${
+                className={`rounded-2xl p-6 shadow-lg shadow-[#0B2A52]/5 border flex flex-col justify-between relative group overflow-hidden ${
                   card.color === 'bg-[#0B2A52]'
                     ? 'bg-[#0B2A52] text-white border-[#0B2A52]'
-                    : 'bg-white text-[#0B2A52] hover:border-[#18B7C9]/40'
+                    : 'bg-white/85 backdrop-blur-md text-[#0B2A52] border-white/80 hover:border-[#18B7C9]/40'
                 }`}
               >
                 {/* Accent Corner Sparkle */}

@@ -59,9 +59,9 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="features" className="py-24 bg-white relative overflow-hidden">
+    <section id="features" className="py-24 bg-transparent relative overflow-hidden">
       {/* Background Soft Gradient */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#EAF4FF]/70 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#18B7C9]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -85,7 +85,7 @@ const FeaturesSection = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="bg-[#F7FAFF] rounded-3xl p-7 border border-[#EAF4FF] hover:border-[#18B7C9]/40 shadow-sm hover:shadow-xl hover:shadow-[#0B2A52]/5 transition-all duration-300 flex flex-col justify-between group"
+                className="bg-white/85 backdrop-blur-md rounded-3xl p-7 border border-white/80 hover:border-[#18B7C9]/40 shadow-md hover:shadow-xl hover:shadow-[#0B2A52]/5 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
                   {/* Top Bar with Icon & Badge */}

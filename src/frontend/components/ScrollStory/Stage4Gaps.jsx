@@ -53,7 +53,7 @@ const Stage4Gaps = () => {
   ];
 
   return (
-    <div className="py-24 bg-white relative overflow-hidden">
+    <div className="py-24 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <SectionHeading
@@ -75,7 +75,7 @@ const Stage4Gaps = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -6 }}
-                className="bg-[#F7FAFF] rounded-3xl p-6 border border-[#EAF4FF] hover:border-[#18B7C9]/40 shadow-sm transition-all duration-300 flex flex-col justify-between"
+                className="bg-white/85 backdrop-blur-md rounded-3xl p-6 border border-white/80 hover:border-[#18B7C9]/40 shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Top Bar */}

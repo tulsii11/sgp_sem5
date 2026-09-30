@@ -14,9 +14,9 @@ const Stage2Potential = () => {
   ];
 
   return (
-    <div className="py-24 bg-white relative overflow-hidden">
+    <div className="py-24 bg-transparent relative overflow-hidden">
       {/* Soft Background Gradient Orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EAF4FF]/60 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#18B7C9]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -69,7 +69,7 @@ const Stage2Potential = () => {
                   style={{
                     transform: `translate(${x}px, ${y}px)`
                   }}
-                  className="absolute bg-white p-3.5 md:p-4 rounded-2xl shadow-lg border border-[#EAF4FF] hover:border-[#18B7C9] flex items-center gap-3 cursor-pointer z-20 min-w-[140px]"
+                  className="absolute bg-white/85 backdrop-blur-md p-3.5 md:p-4 rounded-2xl shadow-lg border border-white/80 hover:border-[#18B7C9] flex items-center gap-3 cursor-pointer z-20 min-w-[140px]"
                 >
                   <div className="w-9 h-9 rounded-xl bg-[#EAF4FF] flex items-center justify-center text-[#18B7C9]">
                     <Icon className="w-5 h-5" />
