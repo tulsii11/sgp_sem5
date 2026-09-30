@@ -83,7 +83,7 @@ const Navbar = () => {
           <Button
             variant="primary"
             size="sm"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/signup')}
             icon={ArrowRight}
             iconPosition="right"
           >
@@ -136,7 +136,7 @@ const Navbar = () => {
               className="w-full justify-center"
               onClick={() => {
                 setMobileMenuOpen(false);
-                navigate('/login');
+                navigate('/signup');
               }}
             >
               Get Started

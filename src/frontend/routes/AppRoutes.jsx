@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
+import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 
 const AppRoutes = () => {
@@ -20,6 +21,9 @@ const AppRoutes = () => {
 
       {/* Login Page */}
       <Route path="/login" element={<Login />} />
+
+      {/* Sign Up Page */}
+      <Route path="/signup" element={<SignUp />} />
 
       {/* Dashboard Placeholder Page */}
       <Route path="/dashboard" element={<Dashboard />} />

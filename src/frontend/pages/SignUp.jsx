@@ -2,23 +2,27 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
-import { ArrowLeft, CheckCircle2, ShieldCheck, Eye, EyeOff, Mail, Lock, User, Crown } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, Eye, EyeOff, Mail, Lock, User, GraduationCap, Sparkles, Crown } from 'lucide-react';
 import mascotImg from '../assets/mascot.png';
 import adminMascotImg from '../assets/admin-mascot.png';
 
-const Login = () => {
+const SignUp = () => {
   const navigate = useNavigate();
 
   // Form Field Values
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [department, setDepartment] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [role, setRole] = useState('student'); // 'student' | 'admin'
 
   const currentMascot = role === 'admin' ? adminMascotImg : mascotImg;
 
-  // Active Field Focus for Mascot Think Box ('name' | 'email' | 'password' | 'button' | null)
+  // Active Field Focus for Mascot Think Box ('name' | 'email' | 'department' | 'password' | 'confirmPassword' | 'button' | null)
   const [focusedField, setFocusedField] = useState(null);
 
   // Animation Step State: 'input' -> 'flipped' -> 'all_set'
@@ -28,7 +32,7 @@ const Login = () => {
   // Dynamic Mascot Think Box Message Subtitle (Minimal phrases)
   const getThinkBoxSubtitle = () => {
     if (step === 'flipped' || step === 'all_set') {
-      return role === 'admin' ? "Admin access verified!" : "Login successful!";
+      return role === 'admin' ? "Admin account created!" : "Account created!";
     }
     switch (focusedField) {
       case 'role':
@@ -37,37 +41,48 @@ const Login = () => {
         return "Enter your name";
       case 'email':
         return "Enter your email id";
+      case 'department':
+        return "Enter your branch";
       case 'password':
         return "Enter your password";
+      case 'confirmPassword':
+        return "Re-enter your password";
       case 'button':
-        return "Click to login";
+        return "Create account";
       default:
-        return role === 'admin' ? "Admin Portal Login" : "Enter your details";
+        return role === 'admin' ? "Register Admin ID" : "Fill in your details";
     }
   };
 
   const getThinkBoxTitle = () => {
-    if (step === 'flipped' || step === 'all_set') return "Welcome back!";
-    return role === 'admin' ? "Admin Portal" : "Let's begin!";
+    if (step === 'flipped' || step === 'all_set') return "Welcome aboard!";
+    return role === 'admin' ? "Create Admin ID" : "Create Account!";
   };
 
-  // Dynamic Pagination Dot Index (0 = Name, 1 = Email, 2 = Password, 3 = Login Button)
+  // Dynamic Pagination Dot Index (0 = Name, 1 = Email, 2 = Branch, 3 = Password/Submit)
   const getActiveDotIndex = () => {
     if (focusedField === 'email') return 1;
-    if (focusedField === 'password') return 2;
-    if (focusedField === 'button') return 3;
+    if (focusedField === 'department') return 2;
+    if (focusedField === 'password' || focusedField === 'confirmPassword' || focusedField === 'button') return 3;
     return 0; // Default / Name field (1st dot)
   };
 
-  const handleLogin = (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
+    if (password !== confirmPassword) {
+      setErrorMsg('Passwords do not match');
+      return;
+    }
+
     if (isFlipping) return;
 
     // Save profile details to localStorage
     const userData = {
-      name: name.trim() || (role === 'admin' ? 'TPO Officer' : 'John Doe'),
-      email: email.trim() || (role === 'admin' ? 'tpo@xyzcollege.edu.in' : 'john.doe@xyzcollege.edu.in'),
-      department: role === 'admin' ? 'Training & Placement Cell' : 'Computer Science & Engineering',
+      name: name.trim() || (role === 'admin' ? 'Placement Officer' : 'John Doe'),
+      email: email.trim() || (role === 'admin' ? 'admin@xyzcollege.edu.in' : 'john.doe@xyzcollege.edu.in'),
+      department: department.trim() || (role === 'admin' ? 'Training & Placement Cell' : 'Computer Science & Engineering'),
       phone: '+91 98765 43210',
       rollNo: role === 'admin' ? 'ADM-2026-TPO' : '21CS084',
       batch: '2026 Batch',
@@ -78,7 +93,7 @@ const Login = () => {
 
     setIsFlipping(true);
 
-    // Step 1 -> Step 2 (3D Card Flip to Flipped State showing Login Successful)
+    // Step 1 -> Step 2 (3D Card Flip to Flipped State showing Registration Successful)
     setTimeout(() => {
       setStep('flipped');
       setIsFlipping(false);
@@ -89,7 +104,7 @@ const Login = () => {
       setStep('all_set');
     }, 1400);
 
-    // Step 3 -> Auto Navigate to Dashboard after 2.8 seconds of displaying center mascot with neck ID
+    // Step 3 -> Auto Navigate to Dashboard after 4.2 seconds
     setTimeout(() => {
       navigate('/dashboard');
     }, 4200);
@@ -160,7 +175,7 @@ const Login = () => {
         </button>
       </div>
 
-      {/* STEP 3 VIEW: YOU'RE ALL SET CENTER STAGE (MATCHING USER'S UPLOADED IMAGE) */}
+      {/* STEP 3 VIEW: YOU'RE ALL SET CENTER STAGE */}
       {step === 'all_set' ? (
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -168,18 +183,18 @@ const Login = () => {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto w-full flex-1 flex flex-col items-center justify-between z-20 px-4 pt-2"
         >
-          {/* Step 3 Header Badge matching uploaded image */}
+          {/* Step 3 Header Badge */}
           <div className="flex flex-col items-center text-center mt-2 z-30">
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white font-extrabold text-sm flex items-center justify-center shadow-md">
+              <div className="w-8 h-8 rounded-full bg-[#18B7C9] text-white font-extrabold text-sm flex items-center justify-center shadow-md">
                 3
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2A52] tracking-tight">
-                You're All Set
+                You're All Set!
               </h2>
             </div>
             <p className="text-xs sm:text-sm font-semibold text-slate-500">
-              Let's get you placed.
+              Your placement journey starts now.
             </p>
           </div>
 
@@ -201,7 +216,7 @@ const Login = () => {
               }`}
             />
 
-            {/* HANGING ID BADGE AROUND MASCOT'S NECK & CHEST (EXACT MATCH TO UPLOADED IMAGE) */}
+            {/* HANGING ID BADGE AROUND MASCOT'S NECK & CHEST */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0, y: -20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -231,12 +246,18 @@ const Login = () => {
                 <Logo size="sm" variant="full" className="justify-center mb-1.5" />
 
                 <h4 className="text-xs font-extrabold text-[#0B2A52] tracking-tight">
-                  Login Successful!
+                  Account Created!
                 </h4>
 
                 <p className="text-[10px] font-semibold text-slate-500 mt-0.5">
-                  Welcome back, <span className="text-[#0B2A52] font-bold">{name || 'Student'}</span>
+                  Welcome aboard, <span className="text-[#0B2A52] font-bold">{name || 'Student'}</span>
                 </p>
+
+                {department && (
+                  <p className="text-[9px] font-medium text-slate-400 mt-0.5">
+                    Dept: {department}
+                  </p>
+                )}
 
                 <p className="text-xs font-bold text-[#18B7C9] mt-1">
                   Let's get you placed.
@@ -248,14 +269,14 @@ const Login = () => {
         </motion.div>
       ) : (
         /* STEP 1 & 2 VIEW: FORM & FLIPPING CARD (LEFT) AND MASCOT (RIGHT) */
-        <div className="max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-end justify-between z-20 px-4 sm:px-8 pt-4 pb-2">
+        <div className="max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-end justify-between z-20 px-4 sm:px-8 pt-2 pb-2">
           
           {/* LEFT COLUMN: STRAIGHT VERTICAL REALISTIC LANYARD HANGING ID CARD */}
-          <div className="lg:col-span-6 flex flex-col items-center justify-end relative h-full pt-10 sm:pt-14 pb-2">
+          <div className="lg:col-span-6 flex flex-col items-center justify-end relative h-full pt-6 sm:pt-8 pb-2">
             
             {/* LANYARD STRAP & METAL SWIVEL HOOK CLASP */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-40 pointer-events-none">
-              <div className="w-12 sm:w-14 h-22 sm:h-26 bg-gradient-to-b from-[#03152C] via-[#072042] to-[#04162E] relative shadow-xl rounded-t-sm flex items-center justify-center border-x border-slate-800">
+              <div className="w-12 sm:w-14 h-16 sm:h-20 bg-gradient-to-b from-[#03152C] via-[#072042] to-[#04162E] relative shadow-xl rounded-t-sm flex items-center justify-center border-x border-slate-800">
                 <div className="w-1.5 h-full bg-[#0B2C5A] opacity-80" />
                 <div className="w-1 h-full bg-[#0A264D] opacity-60 ml-2" />
                 <div className="absolute -bottom-1 w-12 h-2.5 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-500 rounded-sm shadow-md border border-slate-400" />
@@ -289,37 +310,37 @@ const Login = () => {
               </div>
             </div>
 
-            {/* CARD CONTAINER (STRAIGHT VERTICAL - CONSTANT DIMENSIONS DURING FLIP) */}
-            <div className="perspective-1000 w-full max-w-[400px] sm:max-w-[430px] relative mt-16 sm:mt-20">
+            {/* CARD CONTAINER (STRAIGHT VERTICAL) */}
+            <div className="perspective-1000 w-full max-w-[420px] sm:max-w-[450px] relative mt-12 sm:mt-16">
               
               <motion.div
                 animate={{
                   rotateY: step === 'input' ? 0 : 180
                 }}
                 transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-                className="transform-style-3d relative w-full min-h-[490px] sm:min-h-[520px] bg-white rounded-[32px] shadow-[0_20px_50px_rgba(11,42,82,0.14)] border border-slate-100 p-7 sm:p-9 text-left z-20 flex flex-col justify-between"
+                className="transform-style-3d relative w-full min-h-[560px] sm:min-h-[600px] bg-white rounded-[32px] shadow-[0_20px_50px_rgba(11,42,82,0.14)] border border-slate-100 p-6 sm:p-8 text-left z-20 flex flex-col justify-between"
               >
                 
                 {/* Top Oval Slot Cutout for Lanyard Clip */}
-                <div className="w-14 h-4 bg-[#EAF2FB] rounded-full mx-auto mb-4 border border-slate-300 shadow-inner flex items-center justify-center shrink-0">
+                <div className="w-14 h-4 bg-[#EAF2FB] rounded-full mx-auto mb-3 border border-slate-300 shadow-inner flex items-center justify-center shrink-0">
                   <div className="w-8 h-1.5 bg-slate-300 rounded-full opacity-60" />
                 </div>
 
-                {/* FRONT SIDE: LOGIN FORM */}
+                {/* FRONT SIDE: SIGN UP FORM */}
                 <div className={step === 'input' ? 'flex flex-col flex-1 justify-between' : 'hidden'}>
                   
                   {/* Logo & Tagline */}
-                  <div className="text-center mb-4">
-                    <Logo size="md" variant="full" className="justify-center mb-1.5" />
+                  <div className="text-center mb-3">
+                    <Logo size="md" variant="full" className="justify-center mb-1" />
                     <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium">
                       <span className="w-6 h-[1px] bg-slate-200" />
-                      <span>Your Campus. Your Career.</span>
+                      <span>Create Your Placement ID</span>
                       <span className="w-6 h-[1px] bg-slate-200" />
                     </div>
                   </div>
 
                   {/* Form Fields */}
-                  <form onSubmit={handleLogin} className="space-y-4 text-left">
+                  <form onSubmit={handleSignUp} className="space-y-3 text-left">
                     
                     {/* ROLE SELECTION CHOICE INSIDE ID CARD (AT TOP OF ALL ASKED DETAILS) */}
                     <div 
@@ -333,7 +354,7 @@ const Login = () => {
                           setRole('student');
                           setFocusedField('role');
                         }}
-                        className={`flex-1 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                        className={`flex-1 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                           role === 'student'
                             ? 'bg-[#0B2A52] text-white shadow-md'
                             : 'text-slate-500 hover:text-[#0B2A52]'
@@ -349,7 +370,7 @@ const Login = () => {
                           setRole('admin');
                           setFocusedField('role');
                         }}
-                        className={`flex-1 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                        className={`flex-1 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                           role === 'admin'
                             ? 'bg-[#0B2A52] text-white shadow-md'
                             : 'text-slate-500 hover:text-[#0B2A52]'
@@ -360,25 +381,36 @@ const Login = () => {
                       </button>
                     </div>
 
+                    {errorMsg && (
+                      <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs font-semibold text-red-600 text-center">
+                        {errorMsg}
+                      </div>
+                    )}
+
+                    {/* Full Name */}
                     <div>
-                      <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
-                        {role === 'admin' ? 'Officer / Admin Name' : 'Name'}
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1 ml-0.5">
+                        {role === 'admin' ? 'Officer / Admin Full Name' : 'Full Name'}
                       </label>
-                      <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onFocus={() => setFocusedField('name')}
-                        onBlur={() => setFocusedField(null)}
-                        placeholder="Enter your full name"
-                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
-                      />
+                      <div className="relative">
+                        <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          onFocus={() => setFocusedField('name')}
+                          onBlur={() => setFocusedField(null)}
+                          placeholder="John Doe"
+                          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                        />
+                      </div>
                     </div>
 
+                    {/* Email */}
                     <div>
-                      <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
-                        Email
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1 ml-0.5">
+                        Email Address
                       </label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -389,14 +421,35 @@ const Login = () => {
                           onChange={(e) => setEmail(e.target.value)}
                           onFocus={() => setFocusedField('email')}
                           onBlur={() => setFocusedField(null)}
-                          placeholder="Enter your email"
-                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                          placeholder="student@college.edu"
+                          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
                         />
                       </div>
                     </div>
 
+                    {/* Department / Branch */}
                     <div>
-                      <label className="block text-xs font-bold text-[#0B2A52] mb-1.5 ml-0.5">
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1 ml-0.5">
+                        Department / Branch
+                      </label>
+                      <div className="relative">
+                        <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          required
+                          value={department}
+                          onChange={(e) => setDepartment(e.target.value)}
+                          onFocus={() => setFocusedField('department')}
+                          onBlur={() => setFocusedField(null)}
+                          placeholder="Computer Science & Engineering"
+                          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Password */}
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1 ml-0.5">
                         Password
                       </label>
                       <div className="relative">
@@ -408,8 +461,8 @@ const Login = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           onFocus={() => setFocusedField('password')}
                           onBlur={() => setFocusedField(null)}
-                          placeholder="Enter your password"
-                          className="w-full pl-10 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                          placeholder="Create a password"
+                          className="w-full pl-10 pr-12 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
                         />
                         <button
                           type="button"
@@ -421,24 +474,51 @@ const Login = () => {
                       </div>
                     </div>
 
+                    {/* Confirm Password */}
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B2A52] mb-1 ml-0.5">
+                        Confirm Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          required
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          onFocus={() => setFocusedField('confirmPassword')}
+                          onBlur={() => setFocusedField(null)}
+                          placeholder="Confirm password"
+                          className="w-full pl-10 pr-12 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-[#0B2A52] placeholder:text-slate-400 focus:outline-none focus:border-[#18B7C9] focus:ring-2 focus:ring-[#18B7C9]/20 transition-all shadow-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0B2A52] p-1 rounded-lg transition-colors cursor-pointer"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
                     <button
                       type="submit"
                       onMouseEnter={() => setFocusedField('button')}
                       onMouseLeave={() => setFocusedField(null)}
                       className="w-full py-3.5 mt-2 bg-[#031B3A] text-white rounded-xl text-sm font-bold hover:bg-[#072852] transition-all shadow-md active:scale-[0.99] cursor-pointer flex items-center justify-center tracking-wide"
                     >
-                      Login
+                      Create Account
                     </button>
 
-                    <div className="text-center pt-2">
+                    <div className="text-center pt-1">
                       <p className="text-xs font-medium text-slate-500">
-                        Don't have an account?{' '}
+                        Already have an account?{' '}
                         <button
                           type="button"
-                          onClick={() => navigate('/signup')}
+                          onClick={() => navigate('/login')}
                           className="text-[#18B7C9] font-bold hover:underline cursor-pointer"
                         >
-                          Sign up
+                          Log in
                         </button>
                       </p>
                     </div>
@@ -461,15 +541,15 @@ const Login = () => {
                     </motion.div>
 
                     <h3 className="text-2xl font-extrabold text-[#0B2A52] tracking-tight">
-                      Login Successful!
+                      Account Created!
                     </h3>
 
                     <p className="text-xs text-slate-500 font-semibold mt-2">
-                      Welcome back to CampusHire
+                      Welcome to CampusHire Placement Portal
                     </p>
 
                     <p className="text-sm font-bold text-[#18B7C9] mt-3">
-                      Preparing your dashboard...
+                      Preparing your student dashboard...
                     </p>
                   </div>
                 </div>
@@ -495,11 +575,11 @@ const Login = () => {
                   <div className={`w-10 h-10 rounded-full text-white flex items-center justify-center shrink-0 shadow-md mt-0.5 ${
                     role === 'admin' ? 'bg-[#0B2A52] shadow-[#0B2A52]/30' : 'bg-[#18B7C9] shadow-[#18B7C9]/30'
                   }`}>
-                    {role === 'admin' ? <Crown className="w-5 h-5" /> : <User className="w-5 h-5" />}
+                    {role === 'admin' ? <Crown className="w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
                   </div>
 
                   <div className="flex-1 text-left">
-                    {/* Top title ("Let's begin!" or "Admin Portal") - secondary muted header */}
+                    {/* Top title ("Create Account" or "Create Admin ID") - secondary muted header */}
                     <div className="mb-1">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                         {getThinkBoxTitle()}
@@ -556,7 +636,7 @@ const Login = () => {
         </div>
       )}
 
-      {/* FOOTER: Centered Security Badge matching Image 2 */}
+      {/* FOOTER: Centered Security Badge */}
       <div className="max-w-7xl mx-auto w-full text-center text-xs text-slate-400 font-medium py-3 z-30 flex items-center justify-center gap-1.5">
         <ShieldCheck className="w-4 h-4 text-slate-400" />
         <span>Your data is safe with us</span>
@@ -566,7 +646,4 @@ const Login = () => {
   );
 };
 
-export default Login;
-
-
-
+export default SignUp;

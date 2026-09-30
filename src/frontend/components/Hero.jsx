@@ -62,7 +62,7 @@ const Hero = () => {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/signup')}
                 icon={ArrowRight}
                 iconPosition="right"
                 className="w-full sm:w-auto justify-center"
