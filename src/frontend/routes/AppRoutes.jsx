@@ -28,6 +28,9 @@ const AppRoutes = () => {
       {/* Dashboard Placeholder Page */}
       <Route path="/dashboard" element={<Dashboard />} />
 
+      {/* Admin Panel Page Route */}
+      <Route path="/admin" element={<Dashboard defaultRole="admin" />} />
+
       {/* Catch-All Fallback Redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

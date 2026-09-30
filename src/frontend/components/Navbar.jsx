@@ -22,6 +22,20 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle hash scrolling on page load or location change
+  useEffect(() => {
+    if (location.pathname === '/' && location.hash) {
+      setTimeout(() => {
+        const element = document.querySelector(location.hash);
+        if (element) {
+          const yOffset = -90;
+          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 150);
+    }
+  }, [location]);
+
   const navItems = [
     { label: 'Home', href: '#hero' },
     { label: 'Features', href: '#features' },
@@ -32,14 +46,25 @@ const Navbar = () => {
 
   const handleNavClick = (href) => {
     setMobileMenuOpen(false);
+
+    const scrollToAnchor = (anchor) => {
+      const element = document.querySelector(anchor);
+      if (element) {
+        const yOffset = -90;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    };
+
     if (location.pathname !== '/') {
       navigate('/' + href);
+      setTimeout(() => {
+        scrollToAnchor(href);
+      }, 200);
       return;
     }
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+
+    scrollToAnchor(href);
   };
 
   return (

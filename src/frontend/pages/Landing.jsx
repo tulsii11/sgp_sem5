@@ -14,7 +14,9 @@ const Landing = () => {
     <div className="w-full min-h-screen bg-[#F7FAFF]">
       
       {/* STEPS 1 TO 6: Interactive Scroll Story Animation (0% to 100% Scroll Transformation) */}
-      <ScrollStoryAnimation />
+      <div id="hero">
+        <ScrollStoryAnimation />
+      </div>
 
       {/* STEP 7: After Scroll — "Everything you need to crack placements" & University Trust Badges */}
       <CrackPlacementsSection />
