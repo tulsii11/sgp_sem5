@@ -1,98 +1,31 @@
-from career_profiles import CAREER_PROFILES
-
-
-def normalize_skills(skills):
-
-    return [
-        skill.strip().lower()
-        for skill in skills
-        if skill.strip()
-    ]
-
-
-def calculate_career_score(
-    student_skills,
-    career_profile
-):
-
-    student_skills = normalize_skills(student_skills)
-
-    required_skills = career_profile[
-        "required_skills"
-    ]
-
-    preferred_skills = career_profile[
-        "preferred_skills"
-    ]
-
-    required_matches = sum(
-        skill in student_skills
-        for skill in required_skills
-    )
-
-    preferred_matches = sum(
-        skill in student_skills
-        for skill in preferred_skills
-    )
-
-    required_score = (
-        required_matches / len(required_skills)
-        if required_skills
-        else 0
-    )
-
-    preferred_score = (
-        preferred_matches / len(preferred_skills)
-        if preferred_skills
-        else 0
-    )
-
-    final_score = (
-        required_score * 70
-        +
-        preferred_score * 30
-    )
-
-    return round(final_score, 2)
-
+from .career_profiles import get_all_careers, get_career_profile
 
 def recommend_careers(student_skills):
-
-    recommendations = []
-
-    for career_name, profile in CAREER_PROFILES.items():
-
-        score = calculate_career_score(
-            student_skills,
-            profile
-        )
-
-        recommendations.append({
-            "career": career_name,
-            "match_score": score
+    student_skills_lower = set([s.lower().strip() for s in student_skills])
+    
+    career_scores = []
+    
+    for career in get_all_careers():
+        profile = get_career_profile(career)
+        required = set([s.lower() for s in profile.get("required_skills", [])])
+        preferred = set([s.lower() for s in profile.get("preferred_skills", [])])
+        
+        req_match = len(required.intersection(student_skills_lower))
+        pref_match = len(preferred.intersection(student_skills_lower))
+        
+        req_score = (req_match / len(required)) * 100 if required else 0
+        pref_score = (pref_match / len(preferred)) * 100 if preferred else 0
+        
+        # 70% weight for required, 30% weight for preferred
+        total_score = (0.7 * req_score) + (0.3 * pref_score)
+        
+        career_scores.append({
+            "career": career,
+            "match_score": round(total_score, 2),
+            "matched_required": list(required.intersection(student_skills_lower)),
+            "matched_preferred": list(preferred.intersection(student_skills_lower))
         })
-
-    recommendations.sort(
-        key=lambda x: x["match_score"],
-        reverse=True
-    )
-
-    return recommendations
-
-
-if __name__ == "__main__":
-
-    student_skills = [
-        "python",
-        "sql",
-        "pandas",
-        "numpy",
-        "machine learning"
-    ]
-
-    recommendations = recommend_careers(
-        student_skills
-    )
-
-    for recommendation in recommendations:
-        print(recommendation)
+        
+    # Sort by match score descending
+    career_scores.sort(key=lambda x: x["match_score"], reverse=True)
+    return career_scores

@@ -1,152 +1,43 @@
-from typing import Dict, List
-
-
 CAREER_PROFILES = {
     "Data Analyst": {
-        "description": "Analyze data and generate useful business insights.",
-        "required_skills": [
-            "python",
-            "sql",
-            "excel",
-            "statistics",
-            "pandas"
-        ],
-        "preferred_skills": [
-            "power bi",
-            "tableau",
-            "numpy"
-        ],
-        "recommended_projects": [
-            "Sales Dashboard",
-            "Customer Churn Analysis",
-            "Business Data Analysis"
-        ],
-        "certifications": [
-            "Google Data Analytics",
-            "Microsoft Power BI"
-        ]
+        "description": "Analyzes data to help businesses make decisions.",
+        "required_skills": ["python", "sql", "excel", "data visualization", "pandas", "statistics"],
+        "preferred_skills": ["tableau", "power bi", "r", "machine learning"],
+        "recommended_projects": ["Sales Data Dashboard", "Customer Churn Analysis"],
+        "certifications": ["Google Data Analytics Professional Certificate", "IBM Data Analyst"]
     },
-
     "Data Scientist": {
-        "description": "Use statistics, programming and machine learning to solve data problems.",
-        "required_skills": [
-            "python",
-            "sql",
-            "machine learning",
-            "numpy",
-            "pandas",
-            "statistics"
-        ],
-        "preferred_skills": [
-            "deep learning",
-            "tensorflow",
-            "pytorch",
-            "data visualization"
-        ],
-        "recommended_projects": [
-            "House Price Prediction",
-            "Customer Churn Prediction",
-            "Fraud Detection"
-        ],
-        "certifications": [
-            "IBM Data Science",
-            "Google Advanced Data Analytics"
-        ]
+        "description": "Extracts insights and builds models from complex data.",
+        "required_skills": ["python", "sql", "machine learning", "statistics", "pandas", "numpy", "scikit-learn"],
+        "preferred_skills": ["deep learning", "nlp", "tensorflow", "pytorch", "cloud"],
+        "recommended_projects": ["Predictive Maintenance Model", "Recommendation System"],
+        "certifications": ["IBM Data Science Professional Certificate", "AWS Certified Machine Learning"]
     },
-
     "Machine Learning Engineer": {
-        "description": "Build, train and deploy machine learning models.",
-        "required_skills": [
-            "python",
-            "machine learning",
-            "scikit-learn",
-            "numpy",
-            "pandas",
-            "statistics"
-        ],
-        "preferred_skills": [
-            "tensorflow",
-            "pytorch",
-            "docker",
-            "aws"
-        ],
-        "recommended_projects": [
-            "ML Prediction API",
-            "Recommendation System",
-            "Fraud Detection System"
-        ],
-        "certifications": [
-            "Machine Learning Specialization",
-            "AWS Machine Learning"
-        ]
+        "description": "Designs and deploys machine learning models into production.",
+        "required_skills": ["python", "machine learning", "deep learning", "software engineering", "docker", "sql"],
+        "preferred_skills": ["kubernetes", "aws", "azure", "mlops", "tensorflow", "pytorch"],
+        "recommended_projects": ["Model Deployment API", "Real-time Object Detection"],
+        "certifications": ["AWS Certified Machine Learning - Specialty", "Google Professional Machine Learning Engineer"]
     },
-
     "AI Engineer": {
-        "description": "Develop AI applications using machine learning and deep learning.",
-        "required_skills": [
-            "python",
-            "machine learning",
-            "deep learning",
-            "numpy",
-            "pandas"
-        ],
-        "preferred_skills": [
-            "tensorflow",
-            "pytorch",
-            "nlp",
-            "computer vision"
-        ],
-        "recommended_projects": [
-            "AI Chatbot",
-            "Image Classification",
-            "Recommendation System"
-        ],
-        "certifications": [
-            "Deep Learning Specialization",
-            "TensorFlow Developer"
-        ]
+        "description": "Develops intelligent systems, including NLP and Computer Vision applications.",
+        "required_skills": ["python", "deep learning", "nlp", "computer vision", "tensorflow", "pytorch"],
+        "preferred_skills": ["c++", "cloud", "generative ai", "llms"],
+        "recommended_projects": ["Chatbot with LLMs", "Facial Recognition System"],
+        "certifications": ["Azure AI Engineer Associate", "DeepLearning.AI Specialized Certifications"]
     },
-
     "Software Developer": {
-        "description": "Design and develop software applications.",
-        "required_skills": [
-            "programming",
-            "data structures",
-            "algorithms",
-            "git",
-            "database"
-        ],
-        "preferred_skills": [
-            "react",
-            "node.js",
-            "docker",
-            "cloud"
-        ],
-        "recommended_projects": [
-            "Full Stack Web Application",
-            "REST API",
-            "E-Commerce Application"
-        ],
-        "certifications": [
-            "Meta Front-End Developer",
-            "AWS Cloud Practitioner"
-        ]
+        "description": "Builds and maintains software applications.",
+        "required_skills": ["python", "java", "c++", "javascript", "git", "sql", "data structures"],
+        "preferred_skills": ["react", "node.js", "docker", "cloud", "agile"],
+        "recommended_projects": ["Full-Stack Web App", "RESTful API Development"],
+        "certifications": ["AWS Certified Developer - Associate", "Microsoft Certified: Azure Developer"]
     }
 }
 
-
-def get_all_careers() -> List[str]:
+def get_all_careers():
     return list(CAREER_PROFILES.keys())
 
-
-def get_career_profile(career_name: str) -> Dict:
-    return CAREER_PROFILES.get(career_name, {})
-
-
-if __name__ == "__main__":
-    print("Available Careers:")
-    for career in get_all_careers():
-        print("-", career)
-
-    print("\nData Scientist Profile:")
-    print(get_career_profile("Data Scientist"))
+def get_career_profile(career_name):
+    return CAREER_PROFILES.get(career_name)

@@ -1,93 +1,88 @@
 import os
-from career_recommender import recommend_careers
-from skill_gap import calculate_skill_gap
-from course_recommender import recommend_courses
-from roadmap_generator import generate_roadmap
-from resume_parser import extract_text_from_pdf
-from resume_analyzer import analyze_resume
+import sys
 
+# Ensure career_engine can be imported
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def run_skill_flow(student_skills):
-    print("--- 1. Student Skills ---")
-    print(f"Input Skills: {student_skills}")
+from career_engine.career_recommender import recommend_careers
+from career_engine.skill_gap import analyze_skill_gap
+from career_engine.course_recommender import recommend_courses
+from career_engine.roadmap_generator import generate_roadmap
+from career_engine.resume_parser import extract_text_from_pdf
+from career_engine.resume_analyzer import analyze_resume_text
 
-    print("\n--- 2. Career Match ---")
-    matches = recommend_careers(student_skills)
-    for match in matches:
-        print(f" - {match['career']}: {match['match_score']}% Match")
-
-    if not matches:
-        print("No matches found.")
+def test_manual_flow():
+    print("=" * 50)
+    print("TESTING MANUAL SKILL FLOW")
+    print("=" * 50)
+    
+    student_skills = ["Python", "SQL", "Pandas", "Java", "Git"]
+    print(f"1. Student Skills: {student_skills}\n")
+    
+    career_matches = recommend_careers(student_skills)
+    print("2. Career Matches (Career Match Score):")
+    for match in career_matches:
+        print(f"   - {match['career']}: {match['match_score']}%")
+    print()
+    
+    if not career_matches:
+        print("No career matches found.")
         return
-
-    # 3. Select Career (We pick the top match automatically for the flow)
-    top_career = matches[0]["career"]
-    print(f"\n--- 3. Select Career ---")
-    print(f"Selected Top Match: {top_career}")
-
-    print("\n--- 4. Skill Gap Analysis & 5. Missing Skills ---")
-    gap = calculate_skill_gap(student_skills, top_career)
-    missing_required = gap.get("missing_required_skills", [])
-    missing_preferred = gap.get("missing_preferred_skills", [])
+        
+    selected_career = career_matches[0]['career']
+    print(f"3. Selected Career: {selected_career}\n")
     
-    missing_skills = missing_required + missing_preferred
+    gap_analysis = analyze_skill_gap(student_skills, selected_career)
+    print("4. Skill Gap Analysis:")
+    print(f"   - Match: {gap_analysis['skill_match_percentage']}%")
+    print(f"   - Matched Required: {gap_analysis['matched_required_skills']}")
+    print(f"   - Missing Required: {gap_analysis['missing_required_skills']}\n")
     
-    print(f"Missing Required Skills: {missing_required}")
-    print(f"Missing Preferred Skills: {missing_preferred}")
-
-    print("\n--- 6. Course Recommendations ---")
+    missing_skills = gap_analysis['missing_required_skills']
+    print("5. Missing Skills to Learn:")
+    print(f"   {missing_skills}\n")
+    
     courses = recommend_courses(missing_skills)
-    if not courses:
-        print("No courses needed or available.")
-    else:
-        for course in courses:
-            print(f" - [{course['skill'].title()}] {course['title']} ({course['platform']})")
-
-    print("\n--- 7. Career Roadmap ---")
-    roadmap = generate_roadmap(top_career)
+    print("6. Course Recommendations:")
+    for skill, recs in courses.items():
+        print(f"   - {skill.title()}:")
+        for rec in recs:
+            print(f"     * {rec['title']} ({rec['platform']} - {rec['level']})")
+    print()
+    
+    roadmap = generate_roadmap(selected_career)
+    print("7. Career Roadmap:")
     for phase in roadmap:
-        print(f" - Phase {phase['phase']} ({phase['duration']}): {phase['title']} -> {phase['skills']}")
+        print(f"   Phase {phase['phase']} ({phase['duration']}): {phase['title']}")
+        print(f"   Skills: {', '.join(phase['skills'])}")
+    print()
 
-
-def run_resume_flow(pdf_path):
-    print("====================================")
-    print("      TESTING RESUME UPLOAD FLOW    ")
-    print("====================================")
-    print("--- 1. Resume PDF ---")
-    print(f"Reading file: {pdf_path}")
+def test_resume_flow():
+    print("=" * 50)
+    print("TESTING RESUME PARSER FLOW")
+    print("=" * 50)
+    
+    pdf_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_resume.pdf")
     
     if not os.path.exists(pdf_path):
-        print(f"Notice: '{pdf_path}' not found. Please provide an actual PDF file to test this flow.")
+        print("sample_resume.pdf not found. Please provide an actual PDF file to test this flow.")
         return
-
-    print("\n--- 2. PDF Text Extraction ---")
-    try:
-        text = extract_text_from_pdf(pdf_path)
-        print(f"Successfully extracted {len(text)} characters of text.")
-    except Exception as e:
-        print(f"Error parsing PDF: {e}")
-        return
-
-    print("\n--- 3. Skill Detection ---")
-    analysis = analyze_resume(text)
-    skills = analysis.get("skills_found", [])
-    print(f"Skills detected in resume: {skills}")
+        
+    print(f"Found PDF: {pdf_path}")
+    print("Extracting text...")
     
-    if not skills:
-        print("No known skills could be extracted from the resume.")
-        return
-
-    print("\n--- Continuing to Main Flow ---")
-    run_skill_flow(skills)
-
+    text = extract_text_from_pdf(pdf_path)
+    
+    if text:
+        print(f"Successfully extracted {len(text)} characters.")
+        
+        print("Analyzing skills from resume...")
+        analysis = analyze_resume_text(text)
+        
+        print(f"Skills Found ({analysis['skill_count']}): {analysis['skills_found']}")
+    else:
+        print("Failed to extract text from PDF or PDF was empty.")
 
 if __name__ == "__main__":
-    print("====================================")
-    print("      TESTING MANUAL SKILL FLOW     ")
-    print("====================================")
-    sample_skills = ["python", "sql", "pandas", "numpy", "machine learning"]
-    run_skill_flow(sample_skills)
-    
-    print("\n\n")
-    # This will safely tell the user a PDF is needed without throwing an error crash
-    run_resume_flow("sample_resume.pdf")
+    test_manual_flow()
+    test_resume_flow()

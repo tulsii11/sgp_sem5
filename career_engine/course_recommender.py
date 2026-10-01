@@ -1,131 +1,53 @@
-COURSES = {
-
+COURSE_MAPPING = {
     "python": [
-        {
-            "title": "Python Programming",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "Python for Everybody", "level": "Beginner", "platform": "Coursera"},
+        {"title": "Complete Python Bootcamp", "level": "Intermediate", "platform": "Udemy"}
     ],
-
     "sql": [
-        {
-            "title": "SQL Fundamentals",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "SQL for Data Science", "level": "Beginner", "platform": "Coursera"},
+        {"title": "The Complete SQL Bootcamp", "level": "Beginner", "platform": "Udemy"}
     ],
-
     "machine learning": [
-        {
-            "title": "Machine Learning Fundamentals",
-            "level": "Intermediate",
-            "platform": "Online Course"
-        }
+        {"title": "Machine Learning Specialization", "level": "Intermediate", "platform": "Coursera"},
+        {"title": "Machine Learning A-Z", "level": "Beginner", "platform": "Udemy"}
     ],
-
     "statistics": [
-        {
-            "title": "Statistics for Data Science",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "Statistics with Python", "level": "Intermediate", "platform": "Coursera"},
+        {"title": "Intro to Statistics", "level": "Beginner", "platform": "Udacity"}
     ],
-
     "pandas": [
-        {
-            "title": "Pandas for Data Analysis",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "Data Analysis with Pandas and Python", "level": "Intermediate", "platform": "Udemy"}
     ],
-
     "numpy": [
-        {
-            "title": "NumPy Fundamentals",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "Deep Learning Prerequisites: The Numpy Stack", "level": "Beginner", "platform": "Udemy"}
     ],
-
     "deep learning": [
-        {
-            "title": "Deep Learning Fundamentals",
-            "level": "Intermediate",
-            "platform": "Online Course"
-        }
+        {"title": "Deep Learning Specialization", "level": "Advanced", "platform": "Coursera"}
     ],
-
     "nlp": [
-        {
-            "title": "Natural Language Processing",
-            "level": "Intermediate",
-            "platform": "Online Course"
-        }
+        {"title": "Natural Language Processing Specialization", "level": "Advanced", "platform": "Coursera"}
     ],
-
     "git": [
-        {
-            "title": "Git and GitHub Fundamentals",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "Version Control with Git", "level": "Beginner", "platform": "Coursera"}
     ],
-
     "docker": [
-        {
-            "title": "Docker Fundamentals",
-            "level": "Intermediate",
-            "platform": "Online Course"
-        }
+        {"title": "Docker Mastery", "level": "Intermediate", "platform": "Udemy"}
     ],
-
     "cloud": [
-        {
-            "title": "Cloud Computing Fundamentals",
-            "level": "Beginner",
-            "platform": "Online Course"
-        }
+        {"title": "AWS Certified Cloud Practitioner", "level": "Beginner", "platform": "A Cloud Guru"},
+        {"title": "Google Cloud Fundamentals", "level": "Beginner", "platform": "Coursera"}
+    ],
+    "data visualization": [
+        {"title": "Data Visualization with Python", "level": "Intermediate", "platform": "Coursera"}
     ]
 }
 
-
-def get_courses_for_skill(skill):
-
-    skill = skill.strip().lower()
-
-    return COURSES.get(skill, [])
-
-
 def recommend_courses(missing_skills):
-
-    recommendations = []
-
+    recommendations = {}
     for skill in missing_skills:
-
-        courses = get_courses_for_skill(skill)
-
-        for course in courses:
-
-            recommendations.append({
-                "skill": skill,
-                "title": course["title"],
-                "level": course["level"],
-                "platform": course["platform"]
-            })
-
+        skill_lower = skill.lower()
+        if skill_lower in COURSE_MAPPING:
+            recommendations[skill_lower] = COURSE_MAPPING[skill_lower]
+        else:
+            recommendations[skill_lower] = [{"title": f"Learn {skill.title()}", "level": "Varies", "platform": "Coursera / Udemy"}]
     return recommendations
-
-
-if __name__ == "__main__":
-
-    missing_skills = [
-        "python",
-        "sql",
-        "machine learning"
-    ]
-
-    result = recommend_courses(missing_skills)
-
-    for course in result:
-        print(course)
