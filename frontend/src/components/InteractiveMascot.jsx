@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Award, BookOpen, Briefcase, Code, Sparkles, CheckCircle2 } from 'lucide-react';
-import mascotImg from '../assets/mascot.png';
+import mascotImg from '../assets/student-laptop-mascot.png';
 
 const InteractiveMascot = ({ className = '' }) => {
   const [activeTooltip, setActiveTooltip] = useState(null);
@@ -13,7 +13,7 @@ const InteractiveMascot = ({ className = '' }) => {
       id: 'name',
       label: 'Student Name',
       tooltip: 'Enter your name',
-      position: 'top-6 left-1/2 -translate-x-1/2',
+      position: '-top-2 left-1/2 -translate-x-1/2',
       icon: User,
       color: 'bg-[#0B2A52] text-white',
       desc: 'Customize your student identity'
@@ -22,7 +22,7 @@ const InteractiveMascot = ({ className = '' }) => {
       id: 'academics',
       label: 'CGPA & Academics',
       tooltip: 'Input your CGPA & University',
-      position: 'top-24 left-6',
+      position: 'top-16 -left-6 sm:-left-16 lg:-left-20',
       icon: BookOpen,
       color: 'bg-[#18B7C9] text-white',
       desc: 'B.Tech CS • 8.9 CGPA'
@@ -31,7 +31,7 @@ const InteractiveMascot = ({ className = '' }) => {
       id: 'skills',
       label: 'Technical Skills',
       tooltip: 'Select technical & coding skills',
-      position: 'top-36 right-6',
+      position: 'top-28 -right-6 sm:-right-16 lg:-right-20',
       icon: Code,
       color: 'bg-[#3B82D0] text-white',
       desc: 'React, Node, Python, SQL'
@@ -40,7 +40,7 @@ const InteractiveMascot = ({ className = '' }) => {
       id: 'backpack',
       label: 'Projects & Resume',
       tooltip: 'Upload projects & resume',
-      position: 'bottom-28 left-4',
+      position: 'bottom-20 -left-8 sm:-left-20 lg:-left-24',
       icon: Award,
       color: 'bg-[#071D3A] text-white',
       desc: '4 Core Projects & ATS Resume'
@@ -49,7 +49,7 @@ const InteractiveMascot = ({ className = '' }) => {
       id: 'experience',
       label: 'Internships',
       tooltip: 'Add internship experience',
-      position: 'bottom-16 right-4',
+      position: 'bottom-14 -right-8 sm:-right-20 lg:-right-24',
       icon: Briefcase,
       color: 'bg-[#18B7C9] text-white',
       desc: '2 Industry Internships'
@@ -57,22 +57,21 @@ const InteractiveMascot = ({ className = '' }) => {
   ];
 
   return (
-    <div className={`relative w-full max-w-lg mx-auto aspect-[4/5] flex items-center justify-center select-none ${className}`}>
+    <div className={`relative w-full max-w-2xl lg:max-w-3xl mx-auto flex items-center justify-center select-none py-2 ${className}`}>
       
-      {/* Soft Gradient Aura Background */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#EAF4FF] via-white to-[#EAF4FF] border border-[#3B82D0]/20 shadow-2xl overflow-hidden" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-76 h-76 rounded-full bg-[#18B7C9]/15 blur-3xl pointer-events-none" />
+      {/* Soft Ambient Radial Glow (no solid box) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] sm:w-[560px] sm:h-[560px] rounded-full bg-[#18B7C9]/20 blur-3xl pointer-events-none" />
 
-      {/* Mascot Image with Floating Animation */}
+      {/* Mascot Image with Floating Animation (Hero Prominent Size) */}
       <motion.div
-        animate={{ y: [-4, 4, -4] }}
+        animate={{ y: [-6, 6, -6] }}
         transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-        className="relative z-10 w-full h-full flex items-end justify-center pb-2"
+        className="relative z-10 w-full flex items-center justify-center px-1"
       >
         <img
           src={mascotImg}
           alt="CampusHire Student Mascot"
-          className="h-[90%] w-auto object-contain drop-shadow-xl filter"
+          className="w-full max-w-[720px] lg:max-w-[800px] h-auto object-contain drop-shadow-2xl filter scale-105 sm:scale-110"
         />
       </motion.div>
 
@@ -97,9 +96,9 @@ const InteractiveMascot = ({ className = '' }) => {
                   setIsEditingName(!isEditingName);
                 }
               }}
-              className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full shadow-lg border border-white/50 cursor-pointer transition-all duration-200 ${spot.color}`}
+              className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full shadow-xl border border-white/60 cursor-pointer transition-all duration-200 ${spot.color}`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="w-4 h-4" />
               
               {spot.id === 'name' ? (
                 isEditingName ? (
@@ -112,10 +111,10 @@ const InteractiveMascot = ({ className = '' }) => {
                     className="bg-transparent text-white text-xs font-bold outline-none border-b border-white max-w-[100px]"
                   />
                 ) : (
-                  <span className="text-xs font-bold tracking-tight">{studentName}</span>
+                  <span className="text-xs sm:text-sm font-bold tracking-tight">{studentName}</span>
                 )
               ) : (
-                <span className="text-[11px] font-bold tracking-tight">{spot.label}</span>
+                <span className="text-xs sm:text-sm font-bold tracking-tight">{spot.label}</span>
               )}
 
               <span className="relative flex h-2 w-2">
@@ -132,13 +131,13 @@ const InteractiveMascot = ({ className = '' }) => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 4, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#071D3A] text-white p-3 rounded-2xl shadow-2xl border border-[#18B7C9]/40 min-w-[180px] text-center pointer-events-none z-40"
+                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#071D3A] text-white p-3.5 rounded-2xl shadow-2xl border border-[#18B7C9]/40 min-w-[200px] text-center pointer-events-none z-40"
                 >
                   <div className="flex items-center justify-center gap-1.5 text-[#18B7C9] text-xs font-extrabold uppercase tracking-wider mb-1">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>{spot.tooltip}</span>
                   </div>
-                  <p className="text-[11px] text-slate-300 font-medium">
+                  <p className="text-xs text-slate-300 font-medium">
                     {spot.desc}
                   </p>
                   
@@ -152,7 +151,7 @@ const InteractiveMascot = ({ className = '' }) => {
       })}
 
       {/* Bottom Floating Badge */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#EAF4FF] shadow-lg flex items-center gap-2">
+      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-20 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#EAF4FF] shadow-lg flex items-center gap-2">
         <CheckCircle2 className="w-4 h-4 text-[#18B7C9]" />
         <span className="text-xs font-bold text-[#0B2A52]">Hover parts to interact</span>
       </div>

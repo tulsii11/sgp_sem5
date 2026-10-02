@@ -30,7 +30,7 @@ const Hero = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="lg:col-span-7 flex flex-col items-start"
+            className="lg:col-span-6 flex flex-col items-start"
           >
             {/* Top Pill Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EAF4FF] border border-[#18B7C9]/30 text-[#0B2A52] text-xs md:text-sm font-semibold mb-6 shadow-xs">
@@ -103,7 +103,7 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-5 w-full flex justify-center"
+            className="lg:col-span-6 w-full flex justify-center"
           >
             <IllustrationPlaceholder type="hero" />
           </motion.div>

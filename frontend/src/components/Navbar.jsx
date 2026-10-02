@@ -69,10 +69,8 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-md shadow-[#0B2A52]/5 py-3 border-b border-[#EAF4FF]'
-          : 'bg-transparent py-5'
+      className={`fixed top-0 left-0 right-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-[#EAF4FF] transition-all duration-300 ${
+        scrolled ? 'py-3 shadow-md shadow-[#0B2A52]/5' : 'py-4 shadow-xs'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -83,12 +81,12 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Nav Items */}
-        <nav className="hidden md:flex items-center gap-1 bg-white/70 backdrop-blur-xs px-4 py-1.5 rounded-full border border-[#0B2A52]/10 shadow-xs">
+        <nav className="hidden md:flex items-center gap-1 lg:gap-2">
           {navItems.map((item) => (
             <button
               key={item.label}
               onClick={() => handleNavClick(item.href)}
-              className="px-4 py-1.5 text-sm font-medium text-[#14213D] hover:text-[#18B7C9] rounded-full transition-colors duration-200 cursor-pointer"
+              className="px-3.5 py-2 text-sm font-semibold text-[#14213D] hover:text-[#18B7C9] hover:bg-[#EAF4FF]/60 rounded-lg transition-colors duration-200 cursor-pointer"
             >
               {item.label}
             </button>

@@ -252,7 +252,7 @@ const ScrollStoryAnimation = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full px-4">
               
               {/* Left Column Text Content */}
-              <div className="lg:col-span-7 flex flex-col items-start text-left">
+              <div className="lg:col-span-6 flex flex-col items-start text-left">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0B2A52] tracking-tight leading-tight">
                   Placement preparation, <br />
                   <span className="text-[#18B7C9]">designed for students.</span>
@@ -297,7 +297,7 @@ const ScrollStoryAnimation = () => {
               </div>
 
               {/* Right Column Student Mascot Illustration */}
-              <div className="lg:col-span-5 flex justify-center">
+              <div className="lg:col-span-6 flex justify-center">
                 <InteractiveMascot />
               </div>
 
