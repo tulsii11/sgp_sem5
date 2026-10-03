@@ -1,0 +1,16 @@
+{
+  "name": "campus-hire-root",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root orchestration package for CampusHire Placement Platform",
+  "scripts": {
+    "dev": "concurrently -n \"FRONTEND,BACKEND\" -c \"cyan.bold,yellow.bold\" \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "lint:frontend": "npm run lint --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

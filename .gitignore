@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production build
+dist/
+build/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Python / ML Service
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+ENV/
+*.pkl
+*.joblib
+ml_service/.env
+
+# Supabase
+supabase/.temp/
+
+# IDE / System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
